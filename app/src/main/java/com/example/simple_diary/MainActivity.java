@@ -3,19 +3,29 @@ package com.example.simple_diary;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity{
 
     private long backKeyPressedTime = 0;
     private Toast toast;
+    myDBHelper myHelper;
+    SQLiteDatabase sqlDB;
+    ArrayList<String> items = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +34,15 @@ public class MainActivity extends AppCompatActivity{
         Button goDiary, goTodo;
         TextView text1;
 
-        setTitle("Diary");
+        setTitle("TD");
+
+        Calendar c = Calendar.getInstance(); // 오늘 날짜를 받음
 
         goDiary = (Button) findViewById(R.id.goDiary);
         goTodo = (Button) findViewById(R.id.goTodo);
         text1 = (TextView) findViewById(R.id.text1);
+
+        text1.setText(c.get(Calendar.MONTH)+1 + "월" + c.get(Calendar.DATE) + "일");
 
         goDiary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +69,25 @@ public class MainActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), c.get(Calendar.YEAR) +"-"+ (c.get(Calendar.MONTH)+1) +"-"+ c.get(Calendar.DATE), Toast.LENGTH_SHORT).show();
             }
         });
+
+        //오늘 할 일 출력
+        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
+        myHelper = new myDBHelper(this);
+
+        final ListView listview = (ListView) findViewById(R.id.todoView);
+        listview.setAdapter(adapter);
+
+        String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + c.get(Calendar.YEAR) + "" + c.get(Calendar.MONTH) + "" + c.get(Calendar.DATE) + "'";
+        int index = 0;
+        sqlDB = myHelper.getReadableDatabase();
+        Cursor cursor;
+        cursor = sqlDB.rawQuery(sqlSelect, null);
+        while (cursor.moveToNext()) {
+            items.add(cursor.getString(2));
+            index++;
+        }
+        adapter.notifyDataSetChanged();
+        if(index == 0) items.add("오늘 할 일을 추가해보세요");
     }
 
     @Override
@@ -78,6 +111,23 @@ public class MainActivity extends AppCompatActivity{
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
             ActivityCompat.finishAffinity(this);
             toast.cancel();
+        }
+    }
+
+    public class myDBHelper extends SQLiteOpenHelper {
+        public myDBHelper(Context context) {
+            super(context, "todoDB", null, 1);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE groupTBL (gdbId String PRIMARY KEY, gDate String , gContent String, gCheck BOOLEAN);");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS groupTBL");
+            onCreate(db);
         }
     }
 }

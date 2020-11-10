@@ -118,11 +118,9 @@ public class Diary extends AppCompatActivity {
 
             String str = new String(fileData, "UTF-8");
 
-            Toast.makeText(getApplicationContext(), "불러옴", Toast.LENGTH_SHORT).show();
             edtDiary.setText(str);
             btnSave.setText("수정");
         } catch (Exception e) {     //일기 유무 검사
-            Toast.makeText(getApplicationContext(), "일기 없음", Toast.LENGTH_SHORT).show();
             edtDiary.setText("");
             btnSave.setText("저장");
             e.printStackTrace();

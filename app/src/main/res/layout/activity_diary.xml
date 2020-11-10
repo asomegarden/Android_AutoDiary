@@ -3,12 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
+    android:background="#E8EDEB"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
         android:gravity="center_horizontal"
+        android:background="@drawable/raund_gray"
+        android:layout_margin="5dp"
         android:orientation="horizontal">
 
         <Button
@@ -38,31 +41,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="100"
-        android:padding="5dp">
+        android:layout_margin="5dp"
+        android:layout_weight="100">
 
         <EditText
             android:id="@+id/edtDiary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="@drawable/edge"
+            android:background="@drawable/raund_light"
             android:ems="10"
             android:gravity="start"
             android:inputType="text|textMultiLine"
-            android:padding="7dp"
+            android:padding="10dp"
             android:hint="오늘 하루를 기록해보세요" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/raund_gray2"
         android:orientation="horizontal">
         <Button
             android:id="@+id/btnDel"
-            android:background="#494949"
+            android:background="#00ffffff"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
@@ -71,7 +73,7 @@
             android:textColor="#ffffff"/>
         <Button
             android:id="@+id/btnSave"
-            android:background="#494949"
+            android:background="#00ffffff"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
