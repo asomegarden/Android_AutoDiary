@@ -45,7 +45,7 @@ public class Options extends AppCompatActivity {
                 AlertDialog.Builder ad = new AlertDialog.Builder(Options.this);
 
                 ad.setTitle("주의");       // 제목 설정
-                ad.setMessage("정말로 " + Integer.toString(title.length) + "개의 일기를 삭제하시겠습니까?");   // 내용 설정
+                ad.setMessage("정말로 " + title.length + "개의 일기를 삭제하시겠습니까?");   // 내용 설정
 
                 ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -143,7 +143,7 @@ public class Options extends AppCompatActivity {
                     return name.endsWith("txt");
                 } //end accept
             };
-            File file = new File("/data/data/com.example.todoplusdiary/files");
+            File file = new File("/data/data/com.garden.todoplusdiary/files");
             File[] files = file.listFiles(fileFilter);
 
             String [] titleList = new String [files.length]; //파일이 있는 만큼 어레이 생성

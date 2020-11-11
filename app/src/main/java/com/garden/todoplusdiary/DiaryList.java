@@ -151,7 +151,7 @@ public class DiaryList extends AppCompatActivity {
                     return name.endsWith("txt");
                 } //end accept
             };
-            File file = new File("/data/data/com.example.todoplusdiary/files");
+            File file = new File("/data/data/com.garden.todoplusdiary/files");
             File[] files = file.listFiles(fileFilter);
 
             String [] titleList = new String [files.length]; //파일이 있는 만큼 어레이 생성
