@@ -108,7 +108,7 @@ public class Todo extends AppCompatActivity {
             Calendar c = Calendar.getInstance();
             @Override
             public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(Todo.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Todo.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         btnDatePicker.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
