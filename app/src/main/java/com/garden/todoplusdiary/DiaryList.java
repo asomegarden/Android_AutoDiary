@@ -1,9 +1,8 @@
-package com.example.simple_diary;
+package com.garden.todoplusdiary;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 
-import android.graphics.PathDashPathEffect;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class DiaryList extends AppCompatActivity {
 
