@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button goDiary, goTodo;
+        Button goDiary, goTodo, goDiaryList;
         TextView text1;
 
         setTitle("TD");
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity{
 
         goDiary = (Button) findViewById(R.id.goDiary);
         goTodo = (Button) findViewById(R.id.goTodo);
+        goDiaryList = (Button) findViewById(R.id.goDiarylist);
         text1 = (TextView) findViewById(R.id.text1);
 
         text1.setText(c.get(Calendar.MONTH)+1 + "월" + c.get(Calendar.DATE) + "일");
@@ -57,6 +58,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), Todo.class);
+                startActivity(intent);
+                onStop();
+            }
+        });
+
+        goDiaryList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), DiaryList.class);
                 startActivity(intent);
                 onStop();
             }

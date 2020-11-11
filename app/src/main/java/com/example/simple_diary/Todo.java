@@ -322,7 +322,7 @@ public class Todo extends AppCompatActivity {
 
         btnDatePicker.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
 
-        fileName = year + "" + monthOfYear + "" + dayOfMonth + ".txt";
+        fileName = year + "" + String.format("%02d", monthOfYear + 1) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
         FileInputStream inFS = null;
         try {
