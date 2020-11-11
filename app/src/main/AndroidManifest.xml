@@ -20,6 +20,7 @@
         <activity android:name=".Diary"/>
         <activity android:name=".Todo"/>
         <activity android:name=".DiaryList"/>
+        <activity android:name=".Options"/>
     </application>
 
 </manifest>

@@ -8,21 +8,27 @@
     android:background="#E8EDEB"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/back1"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:layout_alignParentTop="true">
         <TextView
             android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_height="wrap_content"
             android:text="00월00일"
             android:id="@+id/text1"
             android:textColor="#000000"
             android:textSize="25pt"/>
-    </LinearLayout>
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/btnset"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/gear"/>
+    </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"
