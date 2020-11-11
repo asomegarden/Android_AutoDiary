@@ -1,4 +1,4 @@
-package com.example.simple_diary;
+package com.garden.todoplusdiary;
 
 import org.junit.Test;
 
