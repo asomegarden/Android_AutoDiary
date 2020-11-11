@@ -135,10 +135,16 @@ public class Diary extends AppCompatActivity {
             outFS = openFileOutput(readDay, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
             String str = edtDiary.getText().toString();
 
-            outFS.write(str.getBytes());
-            outFS.close();
-
-            Toast.makeText(getApplicationContext(), "저장됨", Toast.LENGTH_SHORT).show();
+            if(str.equals("")) {
+                outFS.close();
+                deleteFile(readDay);
+                Toast.makeText(getApplicationContext(), "내용을 입력하세요", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                outFS.write(str.getBytes());
+                Toast.makeText(getApplicationContext(), "저장됨", Toast.LENGTH_SHORT).show();
+                outFS.close();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
