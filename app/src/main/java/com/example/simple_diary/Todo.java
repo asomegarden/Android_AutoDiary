@@ -2,13 +2,19 @@ package com.example.simple_diary;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.InspectableProperty;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -42,6 +49,7 @@ public class Todo extends AppCompatActivity {
     SQLiteDatabase sqlDB;
     int cnt = 0, y, m, d;
     final ArrayList<String> items = new ArrayList<String>();
+    public static final String TAG = "Test_Alert_Dialog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +92,8 @@ public class Todo extends AppCompatActivity {
         // 첫 시작 시에는 오늘 날짜 일기 읽어주기
         Calendar c = Calendar.getInstance(); // 오늘 날짜를 받음
 
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, items);
+        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_item, items);
+
 
         // listview 생성 및 adapter 지정.
         final ListView listview = (ListView) findViewById(R.id.todoView);
@@ -160,6 +169,48 @@ public class Todo extends AppCompatActivity {
 
                 // listview 갱신
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        addButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                AlertDialog.Builder ad = new AlertDialog.Builder(Todo.this);
+
+                ad.setTitle("주의");       // 제목 설정
+                ad.setMessage(date + "의 Todo-List가 초기화됩니다.");   // 내용 설정
+
+                // 확인 버튼 설정
+                ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"Yes Btn Click");
+                        dialog.dismiss();     //닫기
+                        sqlDB = myHelper.getWritableDatabase();
+
+                        String deleteQuery = "DELETE FROM groupTBL WHERE gDate='" + date + "'";
+                        sqlDB.execSQL(deleteQuery);
+                        Toast.makeText(getApplicationContext(), date + "의 ToDo-List 초기화됨.", Toast.LENGTH_SHORT).show();
+                        adapter.clear();
+                        adapter.notifyDataSetChanged();
+                        // Event
+                    }
+                });
+
+                // 취소 버튼 설정
+                ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"No Btn Click");
+                        dialog.dismiss();     //닫기
+                        // Event
+                    }
+                });
+
+                // 창 띄우기
+                ad.show();
+                return false;
             }
         });
 
@@ -265,6 +316,8 @@ public class Todo extends AppCompatActivity {
 
     }
 
+
+
     private Boolean checkedDay(int year, int monthOfYear, int dayOfMonth) {
 
         btnDatePicker.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
@@ -313,6 +366,6 @@ public class Todo extends AppCompatActivity {
         super.onBackPressed();
         onStop();
     }
-}
+};
 
 
