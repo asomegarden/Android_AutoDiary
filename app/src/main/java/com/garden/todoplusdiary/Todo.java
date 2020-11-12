@@ -27,7 +27,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Todo extends AppCompatActivity {
+public class Todo extends BaseActivity {
     Button goHome, goDiary, addButton, deleteButton, makeDiary;
     Button btnDatePicker, btnAdd, itemsave, itemdelete;
     EditText edtDiary, edititem;
@@ -432,14 +432,6 @@ public class Todo extends AppCompatActivity {
             db.execSQL("DROP TABLE IF EXISTS groupTBL");
             onCreate(db);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-        onStop();
     }
 };
 

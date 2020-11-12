@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.garden.todoplusdiary">
 
     <application
@@ -21,6 +22,9 @@
         <activity android:name="com.garden.todoplusdiary.Todo"/>
         <activity android:name="com.garden.todoplusdiary.DiaryList"/>
         <activity android:name="com.garden.todoplusdiary.Options"/>
+        <activity android:name="com.garden.todoplusdiary.AppLocker"/>
+        <service android:name=".TerminatedApp"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

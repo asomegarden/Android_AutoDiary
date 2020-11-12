@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 import java.io.FilenameFilter;
 
-public class Options extends AppCompatActivity {
+public class Options extends BaseActivity {
 
     public static final String TAG = "Test_Alert_Dialog";
     TextView resetdiary, resettodo, help, helptext;
@@ -174,12 +174,5 @@ public class Options extends AppCompatActivity {
             db.execSQL("DROP TABLE IF EXISTS groupTBL");
             onCreate(db);
         }
-    }
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-        onStop();
     }
 }

@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
-public class DiaryList extends AppCompatActivity {
+public class DiaryList extends BaseActivity {
 
     Button  goHome, goTodo, goDiary;
     ArrayList<String> items = new ArrayList<String>();
@@ -167,11 +167,4 @@ public class DiaryList extends AppCompatActivity {
         }//end catch()
     }//end getTitleList
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-        onStop();
-    }
 }

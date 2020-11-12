@@ -1,10 +1,10 @@
 package com.garden.todoplusdiary;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,8 +19,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends BaseActivity{
 
+    final String PREFNAME = "Preferences";
     private long backKeyPressedTime = 0;
     private Toast toast;
     myDBHelper myHelper;
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, TerminatedApp.class));
+
+        isFirstTime();
+
         Button goDiary, goTodo, goDiaryList, btnset;
         TextView text1;
 
@@ -129,6 +135,11 @@ public class MainActivity extends AppCompatActivity{
         // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
         // 현재 표시된 Toast 취소
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putBoolean("isFirstTime", true);
+            editor.apply();
             ActivityCompat.finishAffinity(this);
             toast.cancel();
         }
@@ -150,4 +161,17 @@ public class MainActivity extends AppCompatActivity{
             onCreate(db);
         }
     }
+    public void isFirstTime() {
+        SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        if (settings.getBoolean("isFirstTime", true)) {
+            editor.putBoolean("isFirstTime", false);
+            editor.apply();
+
+            Intent intent = new Intent(getApplicationContext(), AppLocker.class);
+            startActivity(intent);
+        }
+    }
+
 }

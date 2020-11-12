@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 
-public class Diary extends AppCompatActivity {
+public class Diary extends BaseActivity {
 
     EditText edtDiary;
     Button btnSave, btnDatePicker, goHome, goTodo, btnDel;
@@ -147,13 +147,5 @@ public class Diary extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-        onStop();
     }
 }
