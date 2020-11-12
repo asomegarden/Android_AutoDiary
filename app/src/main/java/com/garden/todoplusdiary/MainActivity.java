@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity{
         final ListView listview = (ListView) findViewById(R.id.todoView);
         listview.setAdapter(adapter);
 
-        String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + c.get(Calendar.YEAR) + "" + c.get(Calendar.MONTH) + "" + c.get(Calendar.DATE) + "'";
+        String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + c.get(Calendar.YEAR) + "" + (c.get(Calendar.MONTH) + 1) + "" + c.get(Calendar.DATE) + "'";
         int index = 0;
         sqlDB = myHelper.getReadableDatabase();
         Cursor cursor;

@@ -49,7 +49,6 @@ public class Diary extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 saveDiary(fileName);
-                btnSave.setText("수정");
             }
         });
         btnDel.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +139,7 @@ public class Diary extends AppCompatActivity {
             else {
                 outFS.write(str.getBytes());
                 Toast.makeText(getApplicationContext(), "저장됨", Toast.LENGTH_SHORT).show();
+                btnSave.setText("수정");
                 outFS.close();
             }
 

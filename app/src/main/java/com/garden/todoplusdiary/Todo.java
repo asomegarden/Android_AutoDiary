@@ -89,9 +89,9 @@ public class Todo extends AppCompatActivity {
         listview.setAdapter(adapter);
 
         btnDatePicker.setText(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
-        y = c.get(Calendar.YEAR); m = c.get(Calendar.MONTH); d = c.get(Calendar.DATE);
-        date = c.get(Calendar.YEAR) + "" + c.get(Calendar.MONTH) + "" + c.get(Calendar.DATE);
-        loaditem(listview, adapter, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+        y = c.get(Calendar.YEAR); m = (c.get(Calendar.MONTH) + 1); d = c.get(Calendar.DATE);
+        date = c.get(Calendar.YEAR) + "" + (c.get(Calendar.MONTH) + 1) + "" + c.get(Calendar.DATE);
+        loaditem(listview, adapter, c.get(Calendar.YEAR), (c.get(Calendar.MONTH)+1), c.get(Calendar.DATE));
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             Calendar c = Calendar.getInstance();
@@ -104,9 +104,9 @@ public class Todo extends AppCompatActivity {
                         adapter.clear();
                         adapter.notifyDataSetChanged();
                         cnt = 0;
-                        date = year + "" + month + "" + dayOfMonth;
-                        y = year; m = month; d = dayOfMonth;
-                        loaditem(listview, adapter, year, month, dayOfMonth);
+                        date = year + "" + (month + 1) + "" + dayOfMonth;
+                        y = year; m = month + 1; d = dayOfMonth;
+                        loaditem(listview, adapter, year, month+1, dayOfMonth);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
                 datePickerDialog.show();
@@ -280,8 +280,8 @@ public class Todo extends AppCompatActivity {
 
     private void makeDiary(int year, int monthOfYear, int dayOfMonth) {
 
-        btnDatePicker.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-        fileName = year + "" + String.format("%02d", monthOfYear + 1) + "" + String.format("%02d", dayOfMonth) + ".txt";
+        btnDatePicker.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+        fileName = year + "" + String.format("%02d", monthOfYear) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
         FileInputStream inFS = null;
         try {
