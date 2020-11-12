@@ -114,58 +114,9 @@ public class Todo extends AppCompatActivity {
         });
 
         makeDiary.setOnClickListener(new View.OnClickListener() {
-            String str, str1 = "", str2 = "";
-            int str1cnt = 0, str2cnt = 0;
             @Override
             public void onClick(View v) {
-                if(checkedDay(y, m, d))
-                {
-                    FileOutputStream outFS = null;
-                    try {
-                        outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
-                        String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
-                        sqlDB = myHelper.getReadableDatabase();
-                        Cursor cursor;
-                        cursor = sqlDB.rawQuery(sqlSelect, null);
-                        while (cursor.moveToNext()) {
-                            if(Boolean.parseBoolean(cursor.getString(3).toString()))
-                            {
-                                str1 += cursor.getString(2).toString() + "를 하고, ";
-                                str1cnt++;
-                            }
-                            else
-                            {
-                                str2 += cursor.getString(2).toString() + "와 ";
-                                str2cnt++;
-                            }
-                        }
-
-                        if(str1cnt == 0 && str2cnt == 0){
-                            Toast.makeText(getApplicationContext(), "먼저 투두리스트를 작성하세요", Toast.LENGTH_SHORT).show();
-                            deleteFile(fileName);
-                        }
-                        else if(str1cnt == 0 && str2cnt != 0) {
-                            str = "목표를 하나도 달성하지 못했다. " + str2.substring(0, str2.length()-2) + "를 하지 못 했다.";
-                            outFS.write(str.getBytes());
-                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
-                        }
-                        else if(str1cnt != 0 && str2cnt == 0) {
-                            str = "목표를 모두 달성했다. " + str1.substring(0, str1.length()-5) + " 했다.";
-                            outFS.write(str.getBytes());
-                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            str = str1.substring(0, str1.length() - 5) + " 했다." + " 하지만 " + str2.substring(0, str2.length() - 2) + "는 하지 못 했다.";
-                            outFS.write(str.getBytes());
-                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
-                        }
-                        outFS.close();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                makeDiary(y, m, d);
             }
         });
 
@@ -184,7 +135,7 @@ public class Todo extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
 
-                AlertDialog.Builder ad = new AlertDialog.Builder(Todo.this);
+                AlertDialog.Builder ad = new AlertDialog.Builder(Todo.this, R.style.MyDialogTheme);
 
                 ad.setTitle("주의");       // 제목 설정
                 ad.setMessage(date + "의 Todo-List가 초기화됩니다.");   // 내용 설정
@@ -327,10 +278,9 @@ public class Todo extends AppCompatActivity {
 
 
 
-    private Boolean checkedDay(int year, int monthOfYear, int dayOfMonth) {
+    private void makeDiary(int year, int monthOfYear, int dayOfMonth) {
 
         btnDatePicker.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
-
         fileName = year + "" + String.format("%02d", monthOfYear + 1) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
         FileInputStream inFS = null;
@@ -341,13 +291,130 @@ public class Todo extends AppCompatActivity {
             inFS.read(fileData);
             inFS.close();
 
-            Toast.makeText(getApplicationContext(), "오늘의 일기가 이미 존재합니다", Toast.LENGTH_SHORT).show();
-            return false;
-        } catch (Exception e) {     //일기 유무 검사
-            e.printStackTrace();
-            return true;
-        }
+            AlertDialog.Builder ad = new AlertDialog.Builder(this, R.style.MyDialogTheme);
 
+            ad.setTitle("이미 일기가 존재합니다.");       // 제목 설정
+            ad.setMessage("삭제하고 새로 만드시겠습니까?");   // 내용 설정
+
+            // 확인 버튼 설정
+            ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                String str, str1 = "", str2 = "";
+                int str1cnt = 0, str2cnt = 0;
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.v(TAG,"Yes Btn Click");
+                    dialog.dismiss();     //닫기
+                    FileOutputStream outFS = null;
+                    try {
+                        outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
+                        String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
+                        sqlDB = myHelper.getReadableDatabase();
+                        Cursor cursor;
+                        cursor = sqlDB.rawQuery(sqlSelect, null);
+                        while (cursor.moveToNext()) {
+                            if(Boolean.parseBoolean(cursor.getString(3).toString()))
+                            {
+                                str1 += cursor.getString(2).toString() + "를 하고, ";
+                                str1cnt++;
+                            }
+                            else
+                            {
+                                str2 += cursor.getString(2).toString() + "와 ";
+                                str2cnt++;
+                            }
+                        }
+
+                        if(str1cnt == 0 && str2cnt == 0){
+                            Toast.makeText(getApplicationContext(), "먼저 투두리스트를 작성하세요", Toast.LENGTH_SHORT).show();
+                            deleteFile(fileName);
+                        }
+                        else if(str1cnt == 0 && str2cnt != 0) {
+                            str = "목표를 하나도 달성하지 못했다. " + str2.substring(0, str2.length()-2) + "를 하지 못 했다.";
+                            outFS.write(str.getBytes());
+                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(str1cnt != 0 && str2cnt == 0) {
+                            str = "목표를 모두 달성했다. " + str1.substring(0, str1.length()-5) + " 했다.";
+                            outFS.write(str.getBytes());
+                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            str = str1.substring(0, str1.length() - 5) + " 했다." + " 하지만 " + str2.substring(0, str2.length() - 2) + "는 하지 못 했다.";
+                            outFS.write(str.getBytes());
+                            Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                        }
+                        outFS.close();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            // 취소 버튼 설정
+            ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Log.v(TAG,"No Btn Click");
+                    dialog.dismiss();     //닫기
+                    // Event
+                }
+            });
+            // 창 띄우기
+            ad.show();
+        } catch (Exception e) {     //일기가 없을 때
+            e.printStackTrace();
+
+            String str, str1 = "", str2 = "";
+            int str1cnt = 0, str2cnt = 0;
+
+            FileOutputStream outFS = null;
+            try {
+                outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
+                String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
+                sqlDB = myHelper.getReadableDatabase();
+                Cursor cursor;
+                cursor = sqlDB.rawQuery(sqlSelect, null);
+                while (cursor.moveToNext()) {
+                    if(Boolean.parseBoolean(cursor.getString(3).toString()))
+                    {
+                        str1 += cursor.getString(2).toString() + "를 하고, ";
+                        str1cnt++;
+                    }
+                    else
+                    {
+                        str2 += cursor.getString(2).toString() + "와 ";
+                        str2cnt++;
+                    }
+                }
+
+                if(str1cnt == 0 && str2cnt == 0){
+                    Toast.makeText(getApplicationContext(), "먼저 투두리스트를 작성하세요", Toast.LENGTH_SHORT).show();
+                    deleteFile(fileName);
+                }
+                else if(str1cnt == 0 && str2cnt != 0) {
+                    str = "목표를 하나도 달성하지 못했다. " + str2.substring(0, str2.length()-2) + "를 하지 못 했다.";
+                    outFS.write(str.getBytes());
+                    Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                }
+                else if(str1cnt != 0 && str2cnt == 0) {
+                    str = "목표를 모두 달성했다. " + str1.substring(0, str1.length()-5) + " 했다.";
+                    outFS.write(str.getBytes());
+                    Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    str = str1.substring(0, str1.length() - 5) + " 했다." + " 하지만 " + str2.substring(0, str2.length() - 2) + "는 하지 못 했다.";
+                    outFS.write(str.getBytes());
+                    Toast.makeText(getApplicationContext(), "생성됨", Toast.LENGTH_SHORT).show();
+                }
+                outFS.close();
+
+            } catch (Exception c) {
+                c.printStackTrace();
+                Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public class myDBHelper extends SQLiteOpenHelper {

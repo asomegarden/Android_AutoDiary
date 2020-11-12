@@ -102,7 +102,7 @@ public class DiaryList extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "일기를 추가해보세요", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    AlertDialog.Builder ad = new AlertDialog.Builder(DiaryList.this);
+                    AlertDialog.Builder ad = new AlertDialog.Builder(DiaryList.this, R.style.MyDialogTheme);
 
                     ad.setTitle("주의");       // 제목 설정
                     ad.setMessage(date + "의 일기가 삭제됩니다.");   // 내용 설정

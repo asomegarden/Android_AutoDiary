@@ -42,7 +42,7 @@ public class Options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String[] title = getTitleList();
-                AlertDialog.Builder ad = new AlertDialog.Builder(Options.this);
+                AlertDialog.Builder ad = new AlertDialog.Builder(Options.this, R.style.MyDialogTheme);
 
                 ad.setTitle("주의");       // 제목 설정
                 ad.setMessage("정말로 " + title.length + "개의 일기를 삭제하시겠습니까?");   // 내용 설정
@@ -84,7 +84,7 @@ public class Options extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                AlertDialog.Builder ad = new AlertDialog.Builder(Options.this);
+                AlertDialog.Builder ad = new AlertDialog.Builder(Options.this, R.style.MyDialogTheme);
 
                 ad.setTitle("주의");       // 제목 설정
                 ad.setMessage("정말로 모든 투두리스트를 삭제하시겠습니까?");   // 내용 설정
