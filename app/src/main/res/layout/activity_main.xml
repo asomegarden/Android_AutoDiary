@@ -27,28 +27,30 @@
             android:id="@+id/btnset"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/gear"/>
+            android:background="@drawable/gear" />
     </RelativeLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_margin="5dp"
-        android:layout_height="300dp"
-        android:layout_below="@+id/back1"
-        android:id="@+id/todoView"
-        android:background="@drawable/raund_light">
-    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/raund_light"
-        android:layout_margin="5dp"
-        android:layout_below="@+id/todoView">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="200dp"
+        android:layout_below="@+id/back1">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_margin="5dp"
+            android:layout_height="0dp"
+            android:layout_weight="100"
+            android:id="@+id/todoView"
+            android:background="@drawable/raund_light">
+        </ListView>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00ffffff"
+            android:layout_weight="1"
+            android:background="@drawable/raund_light"
+            android:layout_margin="5dp"
+            android:stateListAnimator="@null"
             android:text="일기 목록"
             android:id="@+id/goDiarylist"/>
     </LinearLayout>

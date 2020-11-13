@@ -34,8 +34,6 @@ public class Todo extends BaseActivity {
     String fileName;
     String date, dbId;
     LinearLayout listwindow, editwindow;
-    myDBHelper myHelper;
-    SQLiteDatabase sqlDB;
     int cnt = 0, y, m, d;
     final ArrayList<String> items = new ArrayList<String>();
     public static final String TAG = "Test_Alert_Dialog";
@@ -268,8 +266,8 @@ public class Todo extends BaseActivity {
         Cursor cursor;
         cursor = sqlDB.rawQuery(sqlSelect, null);
         while (cursor.moveToNext()) {
-            items.add(cursor.getString(2).toString());
-            listview.setItemChecked(index, Boolean.parseBoolean(cursor.getString(3).toString()));
+            items.add(cursor.getString(2));
+            listview.setItemChecked(index, Boolean.parseBoolean(cursor.getString(3)));
             index++;
         }
         adapter.notifyDataSetChanged();
@@ -414,23 +412,6 @@ public class Todo extends BaseActivity {
                 c.printStackTrace();
                 Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-    public class myDBHelper extends SQLiteOpenHelper {
-        public myDBHelper(Context context) {
-            super(context, "todoDB", null, 1);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE groupTBL (gdbId String PRIMARY KEY, gDate String , gContent String, gCheck BOOLEAN);");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS groupTBL");
-            onCreate(db);
         }
     }
 };

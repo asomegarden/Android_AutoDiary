@@ -55,6 +55,34 @@
         android:textColor="#000000"
         android:padding="5dp"
         android:background="@drawable/raund_gray"
+        android:text="보안"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="앱 잠금 활성화"
+        android:layout_margin="5dp"
+        android:background="@drawable/raund_light"
+        android:id="@+id/ApplockToggle"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="비밀번호 설정(기본값 0000)"
+        android:layout_margin="5dp"
+        android:background="@drawable/raund_light"
+        android:id="@+id/setPw"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:textColor="#000000"
+        android:padding="5dp"
+        android:background="@drawable/raund_gray"
         android:text="도움말"/>
     <TextView
         android:layout_width="match_parent"

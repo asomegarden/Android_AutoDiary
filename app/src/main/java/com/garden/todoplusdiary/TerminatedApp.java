@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 public class TerminatedApp extends Service {
     final String PREFNAME = "Preferences";
+    final String PREFNAME0 = "Pref";
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -23,7 +24,7 @@ public class TerminatedApp extends Service {
         SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
-        editor.putBoolean("isFirstTime", true);
+        editor.putBoolean("Appexec", true);
         editor.apply();
         stopSelf();
     }

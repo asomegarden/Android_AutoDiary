@@ -3,6 +3,7 @@ package com.garden.todoplusdiary;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -21,10 +22,9 @@ import java.io.FilenameFilter;
 public class Options extends BaseActivity {
 
     public static final String TAG = "Test_Alert_Dialog";
-    TextView resetdiary, resettodo, help, helptext;
-    myDBHelper myHelper;
-    SQLiteDatabase sqlDB;
-    Boolean toggle = true;
+    TextView resetdiary, resettodo, help, helptext, ApplockToggle, setPw;
+    Boolean Enable = false, toggle = true;
+    String pw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +35,13 @@ public class Options extends BaseActivity {
         resettodo = (TextView) findViewById(R.id.resettodo);
         help = (TextView) findViewById(R.id.help);
         helptext = (TextView) findViewById(R.id.helptext);
-        myHelper = new myDBHelper(this);
+        ApplockToggle = (TextView) findViewById(R.id.ApplockToggle);
+        setPw = (TextView) findViewById(R.id.setPw);
         helptext.setMovementMethod(new ScrollingMovementMethod());
+
+        myHelper = new myDBHelper(this);
+
+        getPw();
 
         resetdiary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +102,7 @@ public class Options extends BaseActivity {
                         sqlDB = myHelper.getReadableDatabase();
 
                         sqlDB.execSQL("delete from groupTBL");
+                        sqlDB.close();
 
                         Toast.makeText(getApplicationContext(), "투두리스트 초기화됨", Toast.LENGTH_SHORT).show();
                     }
@@ -113,6 +119,36 @@ public class Options extends BaseActivity {
                 });
                 // 창 띄우기
                 ad.show();
+            }
+        });
+
+        ApplockToggle.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (Enable)
+                {
+                    ApplockToggle.setText("앱 잠금 활성화");
+                    setPw.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "비밀번호 초기화됨", Toast.LENGTH_SHORT).show();
+                    Enable = false;
+                    pw = "10000";
+                }
+                else
+                {
+                    ApplockToggle.setText("앱 잠금 비활성화");
+                    setPw.setVisibility(View.VISIBLE);
+                    Enable = true;
+                }
+                SavePw();
+            }
+        });
+
+        setPw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PwSetting.class);
+                startActivity(intent);
             }
         });
 
@@ -158,21 +194,39 @@ public class Options extends BaseActivity {
             return null;
         }//end catch()
     }//end getTitleList
+    private void getPw()
+    {
+        sqlDB = myHelper.getReadableDatabase();
 
-    public class myDBHelper extends SQLiteOpenHelper {
-        public myDBHelper(Context context) {
-            super(context, "todoDB", null, 1);
+        Cursor cursor;
+        cursor = sqlDB.rawQuery("SELECT * FROM pwTBL", null);
+
+        cursor.moveToFirst();
+
+        pw = cursor.getString(1);
+        Enable = Boolean.parseBoolean(cursor.getString(2));
+        sqlDB.close();
+
+        if (Enable)
+        {
+            ApplockToggle.setText("앱 잠금 비활성화");
+            setPw.setVisibility(View.VISIBLE);
         }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE groupTBL (gdbId String PRIMARY KEY, gDate String , gContent String, gCheck BOOLEAN);");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS groupTBL");
-            onCreate(db);
+        else
+        {
+            ApplockToggle.setText("앱 잠금 활성화");
+            setPw.setVisibility(View.GONE);
         }
     }
+
+    private void SavePw()
+    {
+        sqlDB = myHelper.getWritableDatabase();
+
+        int Id = 1;
+        sqlDB.execSQL("INSERT OR REPLACE INTO pwTBL VALUES('"+Id+"', '"+pw+"','"+Enable+"');");
+        sqlDB.close();
+    }
+
+
 }

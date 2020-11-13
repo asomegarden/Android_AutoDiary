@@ -23,6 +23,7 @@
         <activity android:name="com.garden.todoplusdiary.DiaryList"/>
         <activity android:name="com.garden.todoplusdiary.Options"/>
         <activity android:name="com.garden.todoplusdiary.AppLocker"/>
+        <activity android:name="com.garden.todoplusdiary.PwSetting"/>
         <service android:name=".TerminatedApp"
             android:stopWithTask="false" />
     </application>

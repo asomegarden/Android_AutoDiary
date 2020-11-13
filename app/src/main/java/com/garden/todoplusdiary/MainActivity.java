@@ -16,16 +16,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends BaseActivity{
 
     final String PREFNAME = "Preferences";
+    final String PREFNAME0 = "Pref";
     private long backKeyPressedTime = 0;
     private Toast toast;
-    myDBHelper myHelper;
-    SQLiteDatabase sqlDB;
+
     ArrayList<String> items = new ArrayList<String>();
 
     @Override
@@ -33,9 +35,12 @@ public class MainActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myHelper = new myDBHelper(this);
+
         startService(new Intent(this, TerminatedApp.class));
 
         isFirstTime();
+        Appexec();
 
         Button goDiary, goTodo, goDiaryList, btnset;
         TextView text1;
@@ -98,7 +103,6 @@ public class MainActivity extends BaseActivity{
 
         //오늘 할 일 출력
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
-        myHelper = new myDBHelper(this);
 
         final ListView listview = (ListView) findViewById(R.id.todoView);
         listview.setAdapter(adapter);
@@ -138,40 +142,51 @@ public class MainActivity extends BaseActivity{
             SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = settings.edit();
 
-            editor.putBoolean("isFirstTime", true);
+            editor.putBoolean("Appexec", true);
             editor.apply();
             ActivityCompat.finishAffinity(this);
             toast.cancel();
         }
     }
 
-    public class myDBHelper extends SQLiteOpenHelper {
-        public myDBHelper(Context context) {
-            super(context, "todoDB", null, 1);
-        }
+    public void Appexec() {
+        SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
 
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE groupTBL (gdbId String PRIMARY KEY, gDate String , gContent String, gCheck BOOLEAN);");
-        }
+        if (settings.getBoolean("Appexec", true)) {
+            editor.putBoolean("Appexec", false);
+            editor.apply();
+            sqlDB = myHelper.getReadableDatabase();
 
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS groupTBL");
-            onCreate(db);
+            Cursor cursor;
+            cursor = sqlDB.rawQuery("SELECT * FROM pwTBL", null);
+
+            cursor.moveToFirst();
+            if(Boolean.parseBoolean(cursor.getString(2))) {
+                sqlDB.close();
+                Intent intent = new Intent(getApplicationContext(), AppLocker.class);
+                startActivity(intent);
+            }
+
         }
     }
+
     public void isFirstTime() {
-        SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
+        SharedPreferences settings = getSharedPreferences(PREFNAME0, MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
         if (settings.getBoolean("isFirstTime", true)) {
             editor.putBoolean("isFirstTime", false);
             editor.apply();
 
-            Intent intent = new Intent(getApplicationContext(), AppLocker.class);
-            startActivity(intent);
+            int Id = 1;
+            String Pw = "1" + "0000";
+
+            Boolean Enable = false;
+
+            sqlDB = myHelper.getWritableDatabase();
+            sqlDB.execSQL("INSERT INTO pwTBL VALUES('"+Id+"', '"+Pw+"','"+Enable+"');");
+            sqlDB.close();
         }
     }
-
 }

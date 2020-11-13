@@ -2,41 +2,38 @@ package com.garden.todoplusdiary;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-public class AppLocker extends AppCompatActivity {
+public class PwSetting extends AppCompatActivity {
     myDBHelper myHelper;
     SQLiteDatabase sqlDB;
-    final String PREFNAME = "Preferences";
-    private long backKeyPressedTime = 0;
-    private Toast toast;
-    TextView pw1, pw2, pw3, pw4;
+    TextView pw1, pw2, pw3, pw4, guide;
     Button btnDel;
-    int cnt = 1;
-    String inputpw = "";
+    int cnt = 1, set = 1;
+    String inputpw = "", temp = "";
     Button[] numButton = new Button[10];
     Integer[] numBtnIDs = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
             R.id.btn4, R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_applocker);
+        setContentView(R.layout.activity_pwsetting);
+
         pw1 = (TextView) findViewById(R.id.pw1);
         pw2 = (TextView) findViewById(R.id.pw2);
         pw3 = (TextView) findViewById(R.id.pw3);
         pw4 = (TextView) findViewById(R.id.pw4);
+        guide = (TextView) findViewById(R.id.guide);
 
         pw1.setInputType(0);
         pw2.setInputType(0);
@@ -78,18 +75,77 @@ public class AppLocker extends AppCompatActivity {
                     {
                         pw4.setText("●");
                         inputpw += numButton[index].getText().toString();
-                        if(checkpw(inputpw)) {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            onStop();
+                        if(set == 1)
+                        {
+                            if(checkpw(inputpw)){
+                                pw1.setText("");
+                                pw2.setText("");
+                                pw3.setText("");
+                                pw4.setText("");
+                                cnt = 1;
+                                guide.setTextColor(Color.rgb(0, 0, 0));
+                                guide.setText("새로운 비밀번호를 입력하세요");
+                                inputpw = "";
+                                set = 2;
+                            }
+                            else
+                            {
+                                pw1.setText("");
+                                pw2.setText("");
+                                pw3.setText("");
+                                pw4.setText("");
+                                cnt = 1;
+                                guide.setText("비밀번호가 일치하지 않습니다");
+                                inputpw = "";
+                                guide.setTextColor(Color.rgb(157, 1, 1));
+                            }
                         }
-                        else{
-                            cnt=1;
+                        else if(set == 2)
+                        {
+                            temp = "1" + inputpw;
                             pw1.setText("");
                             pw2.setText("");
                             pw3.setText("");
                             pw4.setText("");
                             inputpw = "";
+                            cnt = 1;
+                            set = 3;
+                            guide.setText("다시 한 번 입력하세요");
+                        }
+                        else if(set == 3)
+                        {
+                            pw1.setText("");
+                            pw2.setText("");
+                            pw3.setText("");
+                            pw4.setText("");
+                            cnt = 1;
+                            if(temp.substring(1, 5).equals(inputpw))
+                            {
+                                guide.setTextColor(Color.rgb(0, 0, 0));
+                                guide.setText("비밀번호 설정이 완료되었습니다.");
+                                setpw("1" + inputpw);
+                                set = 4;
+                                Handler mHandler = new Handler();
+                                mHandler.postDelayed(new Runnable()  {
+                                    public void run() {
+                                        Intent intent = new Intent(getApplicationContext(), Options.class);
+                                        startActivity(intent);
+                                        onStop();
+                                    }
+                                }, 1000); // 0.5초후
+
+                            }
+                            else
+                            {
+                                pw1.setText("");
+                                pw2.setText("");
+                                pw3.setText("");
+                                pw4.setText("");
+                                cnt = 1;
+                                guide.setText("비밀번호가 일치하지 않습니다");
+                                inputpw = "";
+                                guide.setTextColor(Color.rgb(157, 1, 1));
+                            }
                         }
                     }
                 }
@@ -102,21 +158,25 @@ public class AppLocker extends AppCompatActivity {
                 {
                     cnt--;
                     pw1.setText("");
+                    inputpw = "";
                 }
                 if(cnt==3)
                 {
                     cnt--;
                     pw2.setText("");
+                    inputpw = inputpw.substring(0, 1);
                 }
                 if(cnt==4)
                 {
                     cnt--;
                     pw3.setText("");
+                    inputpw = inputpw.substring(0, 2);
                 }
                 if(cnt==5)
                 {
                     cnt--;
                     pw4.setText("");
+                    inputpw = inputpw.substring(0, 3);
                 }
             }
         });
@@ -137,33 +197,15 @@ public class AppLocker extends AppCompatActivity {
         if(inputpw.equals(pw.substring(1, 5))) return true;
         else return false;
     }
-    @Override
-    public void onBackPressed() {
+    public Boolean setpw(String inputpw){
+        sqlDB = myHelper.getWritableDatabase();
 
-        // 기존 뒤로가기 버튼의 기능을 막기위해 주석처리 또는 삭제
-        // super.onBackPressed();
+        int Id = 1;
+        Boolean enable = true;
+        sqlDB.execSQL("INSERT OR REPLACE INTO pwTBL VALUES('"+Id+"', '"+inputpw+"','"+enable+"');");
+        sqlDB.close();
 
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
-        // 2000 milliseconds = 2 seconds
-        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-            backKeyPressedTime = System.currentTimeMillis();
-            toast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
-        // 현재 표시된 Toast 취소
-        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putBoolean("isFirstTime", true);
-            editor.apply();
-            ActivityCompat.finishAffinity(this);
-            toast.cancel();
-        }
+        return true;
     }
     public class myDBHelper extends SQLiteOpenHelper {
         public myDBHelper(Context context) {
