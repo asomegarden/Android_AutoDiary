@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +48,7 @@ public class AppLocker extends AppCompatActivity {
         for(int i=0; i<numBtnIDs.length; i++){
             numButton[i] = (Button) findViewById(numBtnIDs[i]);
         }
-        for(int i=0; i<numBtnIDs.length; i++)
+        for(int i=0; i<numBtnIDs.length; i++) // 버튼 입력 시
         {
             final int index;
             index = i;
@@ -122,7 +121,7 @@ public class AppLocker extends AppCompatActivity {
         });
     }
     public Boolean checkpw(String inputpw){
-        String pw;
+        String pw = "";
         sqlDB = myHelper.getReadableDatabase();
 
         Cursor cursor;
@@ -171,7 +170,7 @@ public class AppLocker extends AppCompatActivity {
         }
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE pwTBL (gId Integer PRIMARY KEY, gPw String , gEnable BOOLEAN);");
+            db.execSQL("CREATE TABLE pwTBL (gId Integer PRIMARY KEY, gPw String , gEnable BOOLEAN);"); //pw 테이블 생성
         }
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -182,7 +182,7 @@ public class PwSetting extends AppCompatActivity {
         });
     }
     public Boolean checkpw(String inputpw){
-        String pw;
+        String pw = "";
         sqlDB = myHelper.getReadableDatabase();
 
         Cursor cursor;

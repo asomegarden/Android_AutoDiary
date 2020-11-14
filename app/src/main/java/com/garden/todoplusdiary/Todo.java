@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,8 +28,8 @@ public class Todo extends BaseActivity {
     Button goHome, goDiary, addButton, deleteButton, makeDiary;
     Button btnDatePicker, btnAdd, itemsave, itemdelete;
     EditText edtDiary, edititem;
-    String fileName;
-    String date, dbId;
+    String fileName = "";
+    String date = "", dbId = "";
     LinearLayout listwindow, editwindow;
     int cnt = 0, y, m, d;
     final ArrayList<String> items = new ArrayList<String>();
@@ -173,7 +170,7 @@ public class Todo extends BaseActivity {
 
         AdapterView.OnItemClickListener OCL = new AdapterView.OnItemClickListener() {
             boolean checked = true;
-            String str;
+            String str = "";
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 str = items.get(position).toString();
@@ -194,13 +191,13 @@ public class Todo extends BaseActivity {
 
         AdapterView.OnItemLongClickListener OCL_L = new AdapterView.OnItemLongClickListener() {
             boolean checked = true;
-            String str;
+            String str = "";
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 edititem.setText(items.get(position));
                 listwindow.setVisibility(listwindow.GONE);
                 editwindow.setVisibility(editwindow.VISIBLE);
-                str = items.get(position).toString();
+                str = items.get(position);
 
                 itemsave.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -296,7 +293,7 @@ public class Todo extends BaseActivity {
 
             // 확인 버튼 설정
             ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                String str, str1 = "", str2 = "";
+                String str = "", str1 = "", str2 = "";
                 int str1cnt = 0, str2cnt = 0;
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -310,14 +307,14 @@ public class Todo extends BaseActivity {
                         Cursor cursor;
                         cursor = sqlDB.rawQuery(sqlSelect, null);
                         while (cursor.moveToNext()) {
-                            if(Boolean.parseBoolean(cursor.getString(3).toString()))
+                            if(Boolean.parseBoolean(cursor.getString(3)))
                             {
-                                str1 += cursor.getString(2).toString() + "를 하고, ";
+                                str1 += cursor.getString(2) + "를 하고, ";
                                 str1cnt++;
                             }
                             else
                             {
-                                str2 += cursor.getString(2).toString() + "와 ";
+                                str2 += cursor.getString(2) + "와 ";
                                 str2cnt++;
                             }
                         }
@@ -364,7 +361,7 @@ public class Todo extends BaseActivity {
         } catch (Exception e) {     //일기가 없을 때
             e.printStackTrace();
 
-            String str, str1 = "", str2 = "";
+            String str = "", str1 = "", str2 = "";
             int str1cnt = 0, str2cnt = 0;
 
             FileOutputStream outFS = null;
@@ -375,14 +372,14 @@ public class Todo extends BaseActivity {
                 Cursor cursor;
                 cursor = sqlDB.rawQuery(sqlSelect, null);
                 while (cursor.moveToNext()) {
-                    if(Boolean.parseBoolean(cursor.getString(3).toString()))
+                    if(Boolean.parseBoolean(cursor.getString(3)))
                     {
-                        str1 += cursor.getString(2).toString() + "를 하고, ";
+                        str1 += cursor.getString(2) + "를 하고, ";
                         str1cnt++;
                     }
                     else
                     {
-                        str2 += cursor.getString(2).toString() + "와 ";
+                        str2 += cursor.getString(2) + "와 ";
                         str2cnt++;
                     }
                 }

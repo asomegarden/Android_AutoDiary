@@ -1,30 +1,20 @@
 package com.garden.todoplusdiary;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import java.io.FileInputStream;
-import java.util.logging.Logger;
-
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity { //공통으로 들어가는 메소드들 모음
     myDBHelper myHelper;
     SQLiteDatabase sqlDB;
     private long Apppausetime = System.currentTimeMillis();
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() { //뒤로 가기 누르면 홈화면으로
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         super.onBackPressed();
@@ -39,7 +29,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Apppausetime = System.currentTimeMillis();
+        Apppausetime = System.currentTimeMillis(); //액티비티가 정지되면 시간 기록
     }
 
     @Override
@@ -51,7 +41,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (System.currentTimeMillis() >= Apppausetime + 30000) {
+        if (System.currentTimeMillis() >= Apppausetime + 30000) { //재개될 때 30초 이상이 지났으면
 
             myHelper = new myDBHelper(this);
             sqlDB = myHelper.getReadableDatabase();
@@ -60,14 +50,14 @@ public class BaseActivity extends AppCompatActivity {
             cursor = sqlDB.rawQuery("SELECT * FROM pwTBL", null);
 
             cursor.moveToFirst();
-            if(Boolean.parseBoolean(cursor.getString(2))) {
+            if(Boolean.parseBoolean(cursor.getString(2))) { //활성화 여부 읽어오고
                 sqlDB.close();
-                Intent intent = new Intent(getApplicationContext(), AppLocker.class);
+                Intent intent = new Intent(getApplicationContext(), AppLocker.class); //잠금화면 실행
                 startActivity(intent);
             }
         }
     }
-    public class myDBHelper extends SQLiteOpenHelper {
+    public class myDBHelper extends SQLiteOpenHelper { //투두 테이블, 패스워드 테이블 생성
         public myDBHelper(Context context) {
             super(context, "todoDB", null, 1);
         }

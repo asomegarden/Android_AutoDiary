@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,7 +19,7 @@ public class Diary extends BaseActivity {
     EditText edtDiary;
     Button btnSave, btnDatePicker, goHome, goTodo, btnDel;
 
-    String fileName;
+    String fileName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

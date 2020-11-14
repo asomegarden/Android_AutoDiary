@@ -1,11 +1,8 @@
 package com.garden.todoplusdiary;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -24,7 +20,7 @@ public class Options extends BaseActivity {
     public static final String TAG = "Test_Alert_Dialog";
     TextView resetdiary, resettodo, help, helptext, ApplockToggle, setPw;
     Boolean Enable = false, toggle = true;
-    String pw;
+    String pw = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

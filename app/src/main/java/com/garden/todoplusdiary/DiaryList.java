@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
@@ -25,7 +24,7 @@ public class DiaryList extends BaseActivity {
 
     Button  goHome, goTodo, goDiary;
     ArrayList<String> items = new ArrayList<String>();
-    String date;
+    String date = "";
     public static final String TAG = "Test_Alert_Dialog";
 
     @Override
