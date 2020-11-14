@@ -101,21 +101,25 @@ public class AppLocker extends AppCompatActivity {
                 {
                     cnt--;
                     pw1.setText("");
+                    inputpw = "";
                 }
                 if(cnt==3)
                 {
                     cnt--;
                     pw2.setText("");
+                    inputpw = inputpw.substring(0, 1);
                 }
                 if(cnt==4)
                 {
                     cnt--;
                     pw3.setText("");
+                    inputpw = inputpw.substring(0, 2);
                 }
                 if(cnt==5)
                 {
                     cnt--;
                     pw4.setText("");
+                    inputpw = inputpw.substring(0, 3);
                 }
             }
         });

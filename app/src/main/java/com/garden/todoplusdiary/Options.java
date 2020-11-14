@@ -18,7 +18,7 @@ import java.io.FilenameFilter;
 public class Options extends BaseActivity {
 
     public static final String TAG = "Test_Alert_Dialog";
-    TextView resetdiary, resettodo, help, helptext, ApplockToggle, setPw;
+    TextView resetdiary, resettodo, help, helptext, ApplockToggle, setPw, ver;
     Boolean Enable = false, toggle = true;
     String pw = "";
 
@@ -33,6 +33,7 @@ public class Options extends BaseActivity {
         helptext = (TextView) findViewById(R.id.helptext);
         ApplockToggle = (TextView) findViewById(R.id.ApplockToggle);
         setPw = (TextView) findViewById(R.id.setPw);
+        ver = (TextView) findViewById(R.id.ver);
         helptext.setMovementMethod(new ScrollingMovementMethod());
 
         myHelper = new myDBHelper(this);
@@ -161,6 +162,14 @@ public class Options extends BaseActivity {
                     helptext.setVisibility(View.GONE);
                     toggle = true;
                 }
+            }
+        });
+
+        ver.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getApplicationContext(), "v1.3.2", Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 
