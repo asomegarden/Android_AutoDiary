@@ -25,8 +25,8 @@ public class AppLocker extends AppCompatActivity {
     Button btnDel;
     int cnt = 1;
     String inputpw = "";
-    Button[] numButton = new Button[10];
-    Integer[] numBtnIDs = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
+    final Button[] numButton = new Button[10];
+    final Integer[] numBtnIDs = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
             R.id.btn4, R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +121,7 @@ public class AppLocker extends AppCompatActivity {
         });
     }
     public Boolean checkpw(String inputpw){
-        String pw = "";
+        String pw;
         sqlDB = myHelper.getReadableDatabase();
 
         Cursor cursor;
@@ -133,8 +133,7 @@ public class AppLocker extends AppCompatActivity {
 
         sqlDB.close();
 
-        if(inputpw.equals(pw.substring(1, 5))) return true;
-        else return false;
+        return inputpw.equals(pw.substring(1, 5));
     }
     @Override
     public void onBackPressed() {
@@ -164,7 +163,7 @@ public class AppLocker extends AppCompatActivity {
             toast.cancel();
         }
     }
-    public class myDBHelper extends SQLiteOpenHelper {
+    public static class myDBHelper extends SQLiteOpenHelper {
         public myDBHelper(Context context) {
             super(context, "todoDB", null, 1);
         }

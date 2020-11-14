@@ -103,7 +103,7 @@ public class Diary extends BaseActivity {
 
         fileName = year + "" + String.format("%02d", monthOfYear + 1) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
-        FileInputStream inFS = null;
+        FileInputStream inFS;
         try {
             inFS = openFileInput(fileName);
 
@@ -125,7 +125,7 @@ public class Diary extends BaseActivity {
 
     //일기 저장
     private void saveDiary(String readDay) {
-        FileOutputStream outFS = null;
+        FileOutputStream outFS;
         try {
             outFS = openFileOutput(readDay, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
             String str = edtDiary.getText().toString();

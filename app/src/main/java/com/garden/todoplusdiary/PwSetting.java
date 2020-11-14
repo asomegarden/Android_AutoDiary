@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,8 +22,8 @@ public class PwSetting extends AppCompatActivity {
     Button btnDel;
     int cnt = 1, set = 1;
     String inputpw = "", temp = "";
-    Button[] numButton = new Button[10];
-    Integer[] numBtnIDs = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
+    final Button[] numButton = new Button[10];
+    final Integer[] numBtnIDs = {R.id.btn0, R.id.btn1, R.id.btn2, R.id.btn3,
             R.id.btn4, R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8, R.id.btn9};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class PwSetting extends AppCompatActivity {
                                 guide.setText("비밀번호 설정이 완료되었습니다.");
                                 setpw("1" + inputpw);
                                 set = 4;
-                                Handler mHandler = new Handler();
+                                Handler mHandler = new Handler(Looper.getMainLooper());
                                 mHandler.postDelayed(new Runnable()  {
                                     public void run() {
                                         Intent intent = new Intent(getApplicationContext(), Options.class);
@@ -182,7 +183,7 @@ public class PwSetting extends AppCompatActivity {
         });
     }
     public Boolean checkpw(String inputpw){
-        String pw = "";
+        String pw;
         sqlDB = myHelper.getReadableDatabase();
 
         Cursor cursor;
@@ -194,20 +195,17 @@ public class PwSetting extends AppCompatActivity {
 
         sqlDB.close();
 
-        if(inputpw.equals(pw.substring(1, 5))) return true;
-        else return false;
+        return inputpw.equals(pw.substring(1, 5));
     }
-    public Boolean setpw(String inputpw){
+    public void setpw(String inputpw){
         sqlDB = myHelper.getWritableDatabase();
 
         int Id = 1;
         Boolean enable = true;
         sqlDB.execSQL("INSERT OR REPLACE INTO pwTBL VALUES('"+Id+"', '"+inputpw+"','"+enable+"');");
         sqlDB.close();
-
-        return true;
     }
-    public class myDBHelper extends SQLiteOpenHelper {
+    public static class myDBHelper extends SQLiteOpenHelper {
         public myDBHelper(Context context) {
             super(context, "todoDB", null, 1);
         }

@@ -22,21 +22,10 @@ public class BaseActivity extends AppCompatActivity { //공통으로 들어가�
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         Apppausetime = System.currentTimeMillis(); //액티비티가 정지되면 시간 기록
     }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
 
     @Override
     protected void onResume() {
@@ -57,7 +46,7 @@ public class BaseActivity extends AppCompatActivity { //공통으로 들어가�
             }
         }
     }
-    public class myDBHelper extends SQLiteOpenHelper { //투두 테이블, 패스워드 테이블 생성
+    public static class myDBHelper extends SQLiteOpenHelper { //투두 테이블, 패스워드 테이블 생성
         public myDBHelper(Context context) {
             super(context, "todoDB", null, 1);
         }

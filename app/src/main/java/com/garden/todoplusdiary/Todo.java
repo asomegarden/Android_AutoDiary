@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Todo extends BaseActivity {
-    Button goHome, goDiary, addButton, deleteButton, makeDiary;
-    Button btnDatePicker, btnAdd, itemsave, itemdelete;
-    EditText edtDiary, edititem;
+    Button goHome, goDiary, addButton, makeDiary;
+    Button btnDatePicker, itemsave, itemdelete;
+    EditText edititem;
     String fileName = "";
     String date = "", dbId = "";
     LinearLayout listwindow, editwindow;
-    int cnt = 0, y, m, d;
+    int y, m, d;
     final ArrayList<String> items = new ArrayList<String>();
     public static final String TAG = "Test_Alert_Dialog";
 
@@ -47,12 +47,9 @@ public class Todo extends BaseActivity {
         itemdelete = (Button) findViewById(R.id.itemdelete);
         listwindow = (LinearLayout) findViewById(R.id.listwindow);
         editwindow = (LinearLayout) findViewById(R.id.editwindow);
-        edtDiary = (EditText) findViewById(R.id.edtDiary);
         btnDatePicker = (Button) findViewById(R.id.btnDatePicker);
-        btnAdd = (Button) findViewById(R.id.btnAdd);
         makeDiary = (Button) findViewById(R.id.btnMakeDiary);
         addButton = (Button) findViewById(R.id.btnAdd);
-        deleteButton = (Button) findViewById(R.id.btnDel);
 
         myHelper = new myDBHelper(this);
 
@@ -89,7 +86,7 @@ public class Todo extends BaseActivity {
         loaditem(listview, adapter, c.get(Calendar.YEAR), (c.get(Calendar.MONTH)+1), c.get(Calendar.DATE));
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
-            Calendar c = Calendar.getInstance();
+            final Calendar c = Calendar.getInstance();
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(Todo.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
@@ -98,7 +95,6 @@ public class Todo extends BaseActivity {
                         btnDatePicker.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
                         adapter.clear();
                         adapter.notifyDataSetChanged();
-                        cnt = 0;
                         date = year + "" + (month + 1) + "" + dayOfMonth;
                         y = year; m = month + 1; d = dayOfMonth;
                         loaditem(listview, adapter, year, month+1, dayOfMonth);
@@ -173,7 +169,7 @@ public class Todo extends BaseActivity {
             String str = "";
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                str = items.get(position).toString();
+                str = items.get(position);
                 sqlDB = myHelper.getWritableDatabase();
                 if(str.equals("새로운 할 일"))
                 {
@@ -195,18 +191,17 @@ public class Todo extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 edititem.setText(items.get(position));
-                listwindow.setVisibility(listwindow.GONE);
-                editwindow.setVisibility(editwindow.VISIBLE);
+                listwindow.setVisibility(View.GONE);
+                editwindow.setVisibility(View.VISIBLE);
                 str = items.get(position);
 
                 itemsave.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listwindow.setVisibility(listwindow.VISIBLE);
-                        editwindow.setVisibility(editwindow.GONE);
+                        listwindow.setVisibility(View.VISIBLE);
+                        editwindow.setVisibility(View.GONE);
 
-                        if(listview.isItemChecked(position)) checked = true;
-                        else checked = false;
+                        checked = listview.isItemChecked(position);
 
                         sqlDB = myHelper.getWritableDatabase();
                         if(str.equals("새로운 할 일") && !(edititem.getText().toString().equals("새로운 할 일")))
@@ -217,7 +212,7 @@ public class Todo extends BaseActivity {
                         else if(str.equals("새로운 할 일") && edititem.getText().toString().equals("새로운 할 일")) Toast.makeText(getApplicationContext(), "내용을 작성하세요", Toast.LENGTH_SHORT).show();
                         else
                         {
-                            dbId = date + items.get(position).toString();
+                            dbId = date + items.get(position);
                             String deleteQuery = "DELETE FROM groupTBL WHERE gdbId='" + dbId + "'";
                             sqlDB.execSQL(deleteQuery);
                             dbId = date + edititem.getText().toString();
@@ -232,8 +227,8 @@ public class Todo extends BaseActivity {
                 itemdelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listwindow.setVisibility(listwindow.VISIBLE);
-                        editwindow.setVisibility(editwindow.GONE);
+                        listwindow.setVisibility(View.VISIBLE);
+                        editwindow.setVisibility(View.GONE);
 
                         sqlDB = myHelper.getWritableDatabase();
 
@@ -278,7 +273,7 @@ public class Todo extends BaseActivity {
         btnDatePicker.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
         fileName = year + "" + String.format("%02d", monthOfYear) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
-        FileInputStream inFS = null;
+        FileInputStream inFS;
         try {
             inFS = openFileInput(fileName);
 
@@ -299,7 +294,7 @@ public class Todo extends BaseActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     Log.v(TAG,"Yes Btn Click");
                     dialog.dismiss();     //닫기
-                    FileOutputStream outFS = null;
+                    FileOutputStream outFS;
                     try {
                         outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
                         String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
@@ -361,10 +356,10 @@ public class Todo extends BaseActivity {
         } catch (Exception e) {     //일기가 없을 때
             e.printStackTrace();
 
-            String str = "", str1 = "", str2 = "";
+            String str, str1 = "", str2 = "";
             int str1cnt = 0, str2cnt = 0;
 
-            FileOutputStream outFS = null;
+            FileOutputStream outFS;
             try {
                 outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
                 String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
@@ -411,6 +406,6 @@ public class Todo extends BaseActivity {
             }
         }
     }
-};
+}
 
 

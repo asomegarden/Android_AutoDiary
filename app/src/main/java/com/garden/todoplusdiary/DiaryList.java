@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class DiaryList extends BaseActivity {
 
     Button  goHome, goTodo, goDiary;
-    ArrayList<String> items = new ArrayList<String>();
+    final ArrayList<String> items = new ArrayList<String>();
     String date = "";
     public static final String TAG = "Test_Alert_Dialog";
 
@@ -72,7 +72,7 @@ public class DiaryList extends BaseActivity {
         else
         {
             for(int i=0; i<Diarytitle.length; i++) {
-                FileInputStream inFS = null;
+                FileInputStream inFS;
                 try {
                     inFS = openFileInput(Diarytitle[i]);
 
@@ -153,13 +153,16 @@ public class DiaryList extends BaseActivity {
             File file = new File("/data/data/com.garden.todoplusdiary/files");
             File[] files = file.listFiles(fileFilter);
 
-            String [] titleList = new String [files.length]; //파일이 있는 만큼 어레이 생성
-            for(int i = 0;i < files.length;i++)
-            {
-                titleList[i] = files[i].getName();
 
-            }//end for
-            return titleList;
+            if(files == null) return null;
+            else {
+                String[] titleList = new String[files.length]; //파일이 있는 만큼 어레이 생성
+                for (int i = 0; i < files.length; i++) {
+                    titleList[i] = files[i].getName();
+
+                }//end for
+                return titleList;
+            }
         } catch( Exception e )
         {
             return null;

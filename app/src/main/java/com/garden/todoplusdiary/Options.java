@@ -46,22 +46,23 @@ public class Options extends BaseActivity {
                 AlertDialog.Builder ad = new AlertDialog.Builder(Options.this, R.style.MyDialogTheme);
 
                 ad.setTitle("주의");       // 제목 설정
-                ad.setMessage("정말로 " + title.length + "개의 일기를 삭제하시겠습니까?");   // 내용 설정
+                if(title == null) ad.setMessage("일기가 없습니다.");// 내용 설정
+                else ad.setMessage("정말로 " + title.length + "개의 일기를 삭제하시겠습니까?");// 내용 설정
 
                 ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.v(TAG, "Yes Btn Click");
                         dialog.dismiss();     //닫기
-                        String filename="";
+                        String filename;
 
-                        if(title.length!=0) {
+                        if(title!=null)
+                        {
                             for (int i = 0; i < title.length; i++) {
                                 filename = title[i];
                                 deleteFile(filename);
                             }
                         }
-
                         Toast.makeText(getApplicationContext(), "일기장 초기화됨", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -178,13 +179,15 @@ public class Options extends BaseActivity {
             File file = new File("/data/data/com.garden.todoplusdiary/files");
             File[] files = file.listFiles(fileFilter);
 
-            String [] titleList = new String [files.length]; //파일이 있는 만큼 어레이 생성
-            for(int i = 0;i < files.length;i++)
-            {
-                titleList[i] = files[i].getName();
+            if(files == null) return null;
+            else {
+                String[] titleList = new String[files.length]; //파일이 있는 만큼 어레이 생성
+                for (int i = 0; i < files.length; i++) {
+                    titleList[i] = files[i].getName();
 
-            }//end for
-            return titleList;
+                }//end for
+                return titleList;
+            }
         } catch( Exception e )
         {
             return null;
@@ -202,6 +205,7 @@ public class Options extends BaseActivity {
         pw = cursor.getString(1);
         Enable = Boolean.parseBoolean(cursor.getString(2));
         sqlDB.close();
+        cursor.close();
 
         if (Enable)
         {

@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity{
     private long backKeyPressedTime = 0;
     private Toast toast;
 
-    ArrayList<String> items = new ArrayList<String>();
+    final ArrayList<String> items = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity{
         });
 
         text1.setOnClickListener(new View.OnClickListener() {
-            Calendar c = Calendar.getInstance(); // 오늘 날짜를 받음
+            final Calendar c = Calendar.getInstance(); // 오늘 날짜를 받음
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), c.get(Calendar.YEAR) +"-"+ (c.get(Calendar.MONTH)+1) +"-"+ c.get(Calendar.DATE), Toast.LENGTH_SHORT).show();

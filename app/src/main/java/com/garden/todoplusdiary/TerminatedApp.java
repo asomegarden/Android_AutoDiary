@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 
 public class TerminatedApp extends Service {
     final String PREFNAME = "Preferences";
-    final String PREFNAME0 = "Pref";
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
