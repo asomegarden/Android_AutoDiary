@@ -4,10 +4,10 @@
         android:radius="10dp"
         />
     <solid
-        android:color="#C9CDD2"
+        android:color="#9EA4AA"
         />
     <stroke
         android:width="3dp"
-        android:color="#C9CDD2"
+        android:color="#9EA4AA"
         />
 </shape>

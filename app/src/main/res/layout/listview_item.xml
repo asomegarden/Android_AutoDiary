@@ -7,9 +7,9 @@
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-    android:checkMarkTint="#9d0101"
+    android:checkMarkTint="#26282B"
     android:fontFamily="@font/nanumbarunpen"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="5dp"
-    android:padding="5dp"/>
+    android:paddingBottom="5dp"/>

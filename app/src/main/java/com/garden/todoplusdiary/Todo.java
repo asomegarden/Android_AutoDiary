@@ -262,6 +262,7 @@ public class Todo extends BaseActivity {
             listview.setItemChecked(index, Boolean.parseBoolean(cursor.getString(3)));
             index++;
         }
+        if(index == 0) items.add("새로운 할 일");
         adapter.notifyDataSetChanged();
 
     }
