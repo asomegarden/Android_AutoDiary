@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goTodo"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_weight="1"
             android:text="Todo"
             android:background="#00ffffff"/>
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goHome"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_weight="1"
             android:text="Home"
             android:background="#00ffffff"/>
@@ -34,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goDiary"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_weight="1"
             android:text="Diary"
             android:background="#00ffffff"/>
@@ -45,7 +48,7 @@
         android:id="@+id/listwindow"
         android:visibility="visible">
         <ListView
-            android:id="@+id/todoView"
+            android:id="@+id/DiaryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"

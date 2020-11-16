@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity{
         btnset = (Button) findViewById(R.id.btnset);
         text1 = (TextView) findViewById(R.id.text1);
 
-        text1.setText(c.get(Calendar.MONTH)+1 + "월" + c.get(Calendar.DATE) + "일");
+        text1.setText(c.get(Calendar.MONTH)+1 + "월 " + c.get(Calendar.DATE) + "일");
 
         goDiary.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity{
         });
 
         //오늘 할 일 출력
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
+        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_item_simple, items);
 
         final ListView listview = (ListView) findViewById(R.id.todoView);
         listview.setAdapter(adapter);

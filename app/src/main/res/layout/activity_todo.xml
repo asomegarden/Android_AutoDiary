@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goHome"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_weight="1"
             android:text="Home"
             android:background="#00ffffff"/>
@@ -27,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/nanumbarunpen"
             android:text=""
             android:background="#00ffffff"/>
 
@@ -35,6 +37,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/goDiary"
             android:layout_weight="1"
+            android:fontFamily="@font/nanumbarunpen"
             android:text="Diary"
             android:background="#00ffffff"/>
     </LinearLayout>
@@ -66,6 +69,7 @@
                 android:background="#00ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumbarunpen"
                 android:text="일기 생성"
                 android:textColor="#ffffff"/>
 
@@ -75,6 +79,7 @@
                 android:background="#00ffffff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumbarunpen"
                 android:text="추가"
                 android:textColor="#ffffff"/>
 
@@ -92,6 +97,7 @@
             android:layout_height="50dp"
             android:background="@drawable/raund_light"
             android:layout_margin="5dp"
+            android:fontFamily="@font/nanumbarunpen"
             android:padding="10dp"
             android:id="@+id/edititem"/>
 
@@ -107,6 +113,7 @@
                 android:text="삭제"
                 android:background="#00ffffff"
                 android:layout_weight="1"
+                android:fontFamily="@font/nanumbarunpen"
                 android:textColor="#ffffff"
                 android:id="@+id/itemdelete"/>
             <Button
@@ -115,6 +122,7 @@
                 android:background="#00ffffff"
                 android:text="입력"
                 android:layout_weight="1"
+                android:fontFamily="@font/nanumbarunpen"
                 android:textColor="#ffffff"
                 android:id="@+id/itemsave"/>
         </LinearLayout>

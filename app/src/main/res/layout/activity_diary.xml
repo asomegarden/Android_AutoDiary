@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goHome"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_weight="1"
             android:text="Home"
             android:background="#00ffffff"/>
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text=""
+            android:fontFamily="@font/nanumbarunpen"
             android:background="#00ffffff"/>
         <Button
             android:layout_width="wrap_content"
@@ -34,6 +36,7 @@
             android:id="@+id/goTodo"
             android:layout_weight="1"
             android:text="Todo"
+            android:fontFamily="@font/nanumbarunpen"
             android:background="#00ffffff"/>
     </LinearLayout>
 
@@ -50,6 +53,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/raund_light"
             android:ems="10"
+            android:fontFamily="@font/nanumbarunpen"
             android:gravity="start"
             android:inputType="text|textMultiLine"
             android:padding="10dp"
@@ -67,6 +71,7 @@
             android:background="#00ffffff"
             android:layout_width="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:text="삭제"
@@ -75,6 +80,7 @@
             android:id="@+id/btnSave"
             android:background="#00ffffff"
             android:layout_weight="1"
+            android:fontFamily="@font/nanumbarunpen"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
             android:layout_height="wrap_content"

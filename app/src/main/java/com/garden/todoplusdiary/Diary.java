@@ -34,7 +34,7 @@ public class Diary extends BaseActivity {
         Calendar c = Calendar.getInstance();
         checkedDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
 
-        btnDatePicker.setText(c.get(Calendar.YEAR) +"-"+ (c.get(Calendar.MONTH)+1) +"-"+ c.get(Calendar.DATE));
+        btnDatePicker.setText(c.get(Calendar.YEAR) +"년 "+ (c.get(Calendar.MONTH)+1) +"월 "+ c.get(Calendar.DATE) + "일");
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +99,7 @@ public class Diary extends BaseActivity {
     // 일기 파일 읽기
     private void checkedDay(int year, int monthOfYear, int dayOfMonth) {
 
-        btnDatePicker.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+        btnDatePicker.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
 
         fileName = year + "" + String.format("%02d", monthOfYear + 1) + "" + String.format("%02d", dayOfMonth) + ".txt";
 

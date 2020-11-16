@@ -63,8 +63,8 @@ public class DiaryList extends BaseActivity {
         });
 
         final String[] Diarytitle = getTitleList();
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
-        final ListView listview = (ListView) findViewById(R.id.todoView);
+        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_item_simple, items);
+        final ListView listview = (ListView) findViewById(R.id.DiaryList);
         listview.setAdapter(adapter);
 
         if(Diarytitle == null||Diarytitle.length == 0) items.add("일기를 추가해보세요");

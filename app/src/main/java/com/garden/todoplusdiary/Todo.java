@@ -80,7 +80,7 @@ public class Todo extends BaseActivity {
         final ListView listview = (ListView) findViewById(R.id.todoView);
         listview.setAdapter(adapter);
 
-        btnDatePicker.setText(c.get(Calendar.YEAR) + "-" + (c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DATE));
+        btnDatePicker.setText(c.get(Calendar.YEAR) + "년 " + (c.get(Calendar.MONTH) + 1) + "월 " + c.get(Calendar.DATE) + "일");
         y = c.get(Calendar.YEAR); m = (c.get(Calendar.MONTH) + 1); d = c.get(Calendar.DATE);
         date = c.get(Calendar.YEAR) + "" + (c.get(Calendar.MONTH) + 1) + "" + c.get(Calendar.DATE);
         loaditem(listview, adapter, c.get(Calendar.YEAR), (c.get(Calendar.MONTH)+1), c.get(Calendar.DATE));
@@ -92,7 +92,7 @@ public class Todo extends BaseActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(Todo.this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        btnDatePicker.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                        btnDatePicker.setText(year + "년 " + (month + 1) + "월 " + dayOfMonth + "일");
                         adapter.clear();
                         adapter.notifyDataSetChanged();
                         date = year + "" + (month + 1) + "" + dayOfMonth;
@@ -270,7 +270,7 @@ public class Todo extends BaseActivity {
 
     private void makeDiary(int year, int monthOfYear, int dayOfMonth) {
 
-        btnDatePicker.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+        btnDatePicker.setText(year + "년 " + monthOfYear + "월 " + dayOfMonth + "일");
         fileName = year + "" + String.format("%02d", monthOfYear) + "" + String.format("%02d", dayOfMonth) + ".txt";
 
         FileInputStream inFS;
