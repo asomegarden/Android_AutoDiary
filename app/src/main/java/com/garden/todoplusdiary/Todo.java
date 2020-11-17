@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,7 +125,7 @@ public class Todo extends BaseActivity {
             }
         });
 
-        addButton.setOnLongClickListener(new View.OnLongClickListener() {
+        makeDiary.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
@@ -163,6 +166,42 @@ public class Todo extends BaseActivity {
                 return false;
             }
         });
+
+        addButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(Todo.this, R.style.MyDialogTheme);
+
+                ad.setTitle("확인");       // 제목 설정
+                ad.setMessage("캡쳐 하시겠습니까?");   // 내용 설정
+
+                // 확인 버튼 설정
+                ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"Yes Btn Click");
+                        dialog.dismiss();     //닫기
+                        captureView(listview);
+                        Toast.makeText(getApplicationContext(), "DCIM/TD에 저장됨", Toast.LENGTH_SHORT).show();
+                        // Event
+                    }
+                });
+
+                // 취소 버튼 설정
+                ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"No Btn Click");
+                        dialog.dismiss();     //닫기
+                        // Event
+                    }
+                });
+                // 창 띄우기
+                ad.show();
+                return false;
+            }
+        });
+
 
         AdapterView.OnItemClickListener OCL = new AdapterView.OnItemClickListener() {
             boolean checked = true;
@@ -405,6 +444,27 @@ public class Todo extends BaseActivity {
                 c.printStackTrace();
                 Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+    public static void captureView(View View) {
+        View.buildDrawingCache();
+        Bitmap captureView = View.getDrawingCache();
+        FileOutputStream fos;
+
+        String strFolderPath = "/sdcard/DCIM/TD";
+        File folder = new File(strFolderPath);
+        if(!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        String strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png";
+        File fileCacheItem = new File(strFilePath);
+
+        try {
+            fos = new FileOutputStream(fileCacheItem);
+            captureView.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

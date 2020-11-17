@@ -2,15 +2,22 @@ package com.garden.todoplusdiary;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 
@@ -18,7 +25,7 @@ public class Diary extends BaseActivity {
 
     EditText edtDiary;
     Button btnSave, btnDatePicker, goHome, goTodo, btnDel;
-
+    public static final String TAG = "Test_Alert_Dialog";
     String fileName = "";
 
     @Override
@@ -57,6 +64,41 @@ public class Diary extends BaseActivity {
                 saveDiary(fileName);
                 btnSave.setText("저장");
                 deleteFile(fileName);
+            }
+        });
+
+        btnSave.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(Diary.this, R.style.MyDialogTheme);
+
+                ad.setTitle("확인");       // 제목 설정
+                ad.setMessage("캡쳐 하시겠습니까?");   // 내용 설정
+
+                // 확인 버튼 설정
+                ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"Yes Btn Click");
+                        dialog.dismiss();     //닫기
+                        captureView(edtDiary);
+                        Toast.makeText(getApplicationContext(), "DCIM/TD에 저장됨", Toast.LENGTH_SHORT).show();
+                        // Event
+                    }
+                });
+
+                // 취소 버튼 설정
+                ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.v(TAG,"No Btn Click");
+                        dialog.dismiss();     //닫기
+                        // Event
+                    }
+                });
+                // 창 띄우기
+                ad.show();
+                return false;
             }
         });
 
@@ -145,6 +187,27 @@ public class Diary extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static void captureView(View View) {
+        View.buildDrawingCache();
+        Bitmap captureView = View.getDrawingCache();
+        FileOutputStream fos;
+
+        String strFolderPath = "/sdcard/DCIM/TD";
+        File folder = new File(strFolderPath);
+        if(!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        String strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png";
+        File fileCacheItem = new File(strFilePath);
+
+        try {
+            fos = new FileOutputStream(fileCacheItem);
+            captureView.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

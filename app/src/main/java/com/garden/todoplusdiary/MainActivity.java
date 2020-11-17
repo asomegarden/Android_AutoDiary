@@ -1,9 +1,12 @@
 package com.garden.todoplusdiary;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +21,7 @@ import java.util.Calendar;
 
 public class MainActivity extends BaseActivity{
 
+    private final int PERMISSIONS_REQUEST_RESULT = 1;
     final String PREFNAME = "Preferences";
     final String PREFNAME0 = "Pref";
     private long backKeyPressedTime = 0;
@@ -36,6 +40,12 @@ public class MainActivity extends BaseActivity{
 
         isFirstTime();
         Appexec();
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_RESULT);
+        }else {
+        }
 
         Button goDiary, goTodo, goDiaryList, btnset;
         TextView text1;

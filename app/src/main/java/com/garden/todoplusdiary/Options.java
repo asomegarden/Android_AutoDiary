@@ -168,7 +168,7 @@ public class Options extends BaseActivity {
         ver.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getApplicationContext(), "v1.3.2.1", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "v1.3.3", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
