@@ -82,7 +82,7 @@ public class Diary extends BaseActivity {
                         Log.v(TAG,"Yes Btn Click");
                         dialog.dismiss();     //닫기
                         captureView(edtDiary);
-                        Toast.makeText(getApplicationContext(), "DCIM/TD에 저장됨", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "캡쳐됨", Toast.LENGTH_SHORT).show();
                         // Event
                     }
                 });
@@ -189,16 +189,12 @@ public class Diary extends BaseActivity {
             Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
         }
     }
-    public static void captureView(View View) {
+    public void captureView(View View) {
         View.buildDrawingCache();
         Bitmap captureView = View.getDrawingCache();
         FileOutputStream fos;
 
-        String strFolderPath = "/sdcard/DCIM/TD";
-        File folder = new File(strFolderPath);
-        if(!folder.exists()) {
-            folder.mkdirs();
-        }
+        String strFolderPath = getExternalFilesDir(null).getAbsolutePath() + "/Capture"; //내장에 만든다
 
         String strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png";
         File fileCacheItem = new File(strFilePath);

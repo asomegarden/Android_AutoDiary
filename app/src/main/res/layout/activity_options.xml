@@ -120,7 +120,7 @@ Diary화면에서 중앙의 흰 부분을 눌러 일기를 작성 및 수정할 
 잠금 화면이 뜨게 됩니다. 최초 비밀번호는 '0000'이며\n
 앱 잠금기능을 비활성화하면 다시 '0000'으로 초기화됩니다.\n\n
 Diary화면과 Todo화면에서 캡쳐 기능을 지원합니다. '저장/수정' 또는 '추가'버튼을 길게 눌러보세요\n
-캡쳐한 사진은 /DCIM/TD/에 저장됩니다."
+캡쳐한 사진은 Android/data/com.garden.todoplusdiary/files/Capture 에 저장됩니다."
         android:layout_margin="5dp"
         android:background="@drawable/raund_light"
         android:id="@+id/helptext"/>

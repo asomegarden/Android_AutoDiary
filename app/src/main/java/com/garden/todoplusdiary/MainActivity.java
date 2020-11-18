@@ -1,14 +1,13 @@
 package com.garden.todoplusdiary;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,12 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends BaseActivity{
 
-    private final int PERMISSIONS_REQUEST_RESULT = 1;
+    final int PERMISSIONS_REQUEST_CODE = 1;
     final String PREFNAME = "Preferences";
     final String PREFNAME0 = "Pref";
     private long backKeyPressedTime = 0;
@@ -41,11 +41,7 @@ public class MainActivity extends BaseActivity{
         isFirstTime();
         Appexec();
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_RESULT);
-        }else {
-        }
+        requestPermission();
 
         Button goDiary, goTodo, goDiaryList, btnset;
         TextView text1;
@@ -192,6 +188,38 @@ public class MainActivity extends BaseActivity{
             sqlDB = myHelper.getWritableDatabase();
             sqlDB.execSQL("INSERT INTO pwTBL VALUES('"+Id+"', '"+Pw+"','"+Enable+"');");
             sqlDB.close();
+        }
+    }
+
+    private void requestPermission() {
+        boolean shouldProviceRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE);//사용자가 이전에 거절한적이 있어도 true 반환
+
+        if (shouldProviceRationale) {
+            //앱에 필요한 권한이 없어서 권한 요청
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_CODE);
+            //권한있을때.
+            //오레오부터 꼭 권한체크내에서 파일 만들어줘야함
+            makeDir();
+        }
+    }
+    public void makeDir() {
+        String root = getExternalFilesDir(null).getAbsolutePath(); //내장에 만든다
+        String directoryName = "Capture";
+        final File myDir = new File(root + "/" + directoryName);
+        if (!myDir.exists()) {
+            boolean wasSuccessful = myDir.mkdir();
+            if (!wasSuccessful) {
+                System.out.println("file: was not successful.");
+            } else {
+                System.out.println("file: 최초로 폴더 만듦." + root + "/" + directoryName);
+            }
+        } else {
+            System.out.println("file: " + root + "/" + directoryName +"already exists");
         }
     }
 }
