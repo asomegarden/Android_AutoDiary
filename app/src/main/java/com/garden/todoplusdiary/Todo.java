@@ -1,11 +1,14 @@
 package com.garden.todoplusdiary;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,9 +19,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,56 +33,41 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Todo extends BaseActivity {
-    Button goHome, goDiary, addButton, makeDiary;
-    Button btnDatePicker, itemsave, itemdelete;
-    EditText edititem;
+    final int PERMISSIONS_REQUEST_CODE = 1;
+    final String PREFNAME = "Preferences";
+    final String PREFNAME0 = "Pref";
+
+    Button addButton, makeDiary, btnDatePicker;
+    EditText edtNewItem;
     String fileName = "";
     String date = "", dbId = "";
-    LinearLayout listwindow, editwindow;
+    LinearLayout btnMenu, btnAdd;
     int y, m, d;
-    final ArrayList<String> items = new ArrayList<String>();
-    public static final String TAG = "Test_Alert_Dialog";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
 
-        goHome = (Button) findViewById(R.id.goHome);
-        goDiary = (Button) findViewById(R.id.goDiary);
-        edititem = (EditText) findViewById(R.id.edititem);
-        itemsave = (Button) findViewById(R.id.itemsave);
-        itemdelete = (Button) findViewById(R.id.itemdelete);
-        listwindow = (LinearLayout) findViewById(R.id.listwindow);
-        editwindow = (LinearLayout) findViewById(R.id.editwindow);
-        btnDatePicker = (Button) findViewById(R.id.btnDatePicker);
-        makeDiary = (Button) findViewById(R.id.btnMakeDiary);
-        addButton = (Button) findViewById(R.id.btnAdd);
-
         myHelper = new myDBHelper(this);
 
-        goHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                onStop();
-            }
-        });
-        goDiary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Diary.class);
-                startActivity(intent);
-                onStop();
-            }
-        });
+        startService(new Intent(this, TerminatedApp.class));
+
+        isFirstTime();
+        Appexec();
+
+
+        edtNewItem = (EditText) findViewById(R.id.edtNewItem);
+        btnDatePicker = (Button) findViewById(R.id.btnDatePicker);
+        makeDiary = (Button) findViewById(R.id.btnMakeDiary);
+
+        btnMenu = (LinearLayout) findViewById(R.id.btnMenu);
+        btnAdd = (LinearLayout) findViewById(R.id.btnAdd);
 
         // 첫 시작 시에는 오늘 날짜 일기 읽어주기
         Calendar c = Calendar.getInstance(); // 오늘 날짜를 받음
 
-        final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_item, items);
-
+        final CustomLinearLayoutAdapter adapter = new CustomLinearLayoutAdapter();
 
         // listview 생성 및 adapter 지정.
         final ListView listview = (ListView) findViewById(R.id.todoView);
@@ -107,21 +97,44 @@ public class Todo extends BaseActivity {
             }
         });
 
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Todo.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edtNewItem.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(), "내용을 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else if(edtNewItem.getText().toString().equals("새로운 할 일")) {
+                    adapter.addItem("새로운 할 일");
+                    adapter.notifyDataSetChanged();
+                    edtNewItem.setText("");
+                }
+                else{
+                    adapter.addItem(edtNewItem.getText().toString());
+                    adapter.notifyDataSetChanged();
+
+                    dbId = date + edtNewItem.getText().toString();
+
+                    sqlDB = myHelper.getWritableDatabase();
+                    sqlDB.execSQL("INSERT OR REPLACE INTO groupTBL VALUES('"+dbId+"', '"+date+"','"+edtNewItem.getText().toString()+"', '" +false+ "');");
+
+                    sqlDB.close();
+                    edtNewItem.setText("");
+                }
+            }
+        });
+
         makeDiary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 makeDiary(y, m, d);
-            }
-        });
-
-        addButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-
-                // 아이템 추가.
-                items.add("새로운 할 일");
-
-                // listview 갱신
-                adapter.notifyDataSetChanged();
             }
         });
 
@@ -138,7 +151,7 @@ public class Todo extends BaseActivity {
                 ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"Yes Btn Click");
+
                         dialog.dismiss();     //닫기
                         sqlDB = myHelper.getWritableDatabase();
 
@@ -155,7 +168,6 @@ public class Todo extends BaseActivity {
                 ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"No Btn Click");
                         dialog.dismiss();     //닫기
                         // Event
                     }
@@ -166,60 +178,28 @@ public class Todo extends BaseActivity {
                 return false;
             }
         });
-
-        addButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(Todo.this, R.style.MyDialogTheme);
-
-                ad.setTitle("확인");       // 제목 설정
-                ad.setMessage("캡쳐 하시겠습니까?");   // 내용 설정
-
-                // 확인 버튼 설정
-                ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"Yes Btn Click");
-                        dialog.dismiss();     //닫기
-                        captureView(listview);
-                        Toast.makeText(getApplicationContext(), "캡쳐됨", Toast.LENGTH_SHORT).show();
-                        // Event
-                    }
-                });
-
-                // 취소 버튼 설정
-                ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"No Btn Click");
-                        dialog.dismiss();     //닫기
-                        // Event
-                    }
-                });
-                // 창 띄우기
-                ad.show();
-                return false;
-            }
-        });
-
 
         AdapterView.OnItemClickListener OCL = new AdapterView.OnItemClickListener() {
             boolean checked = true;
             String str = "";
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                str = items.get(position);
-                sqlDB = myHelper.getWritableDatabase();
-                if(str.equals("새로운 할 일"))
-                {
-                    Toast.makeText(getApplicationContext(), "길게 눌러 수정하세요", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                TextView text1 = (TextView) view.findViewById(R.id.textView1);
+                str = adapter.getItem(position);
+
+                if(!str.equals("새로운 할 일")) {
+                    sqlDB = myHelper.getWritableDatabase();
+
                     checked = listview.isItemChecked(position);
                     dbId = date + str;
-                    sqlDB.execSQL("INSERT OR REPLACE INTO groupTBL VALUES('"+dbId+"', '"+date+"','"+str+"', '" +checked+ "');");
+                    sqlDB.execSQL("INSERT OR REPLACE INTO groupTBL VALUES('" + dbId + "', '" + date + "','" + str + "', '" + checked + "');");
                     sqlDB.close();
+                }
+                if(listview.isItemChecked(position)){
+                    text1.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                }
+                else{
+                    text1.setPaintFlags(0);
                 }
             }
         };
@@ -229,46 +209,27 @@ public class Todo extends BaseActivity {
             String str = "";
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                edititem.setText(items.get(position));
-                listwindow.setVisibility(View.GONE);
-                editwindow.setVisibility(View.VISIBLE);
-                str = items.get(position);
+                View vDialog = View.inflate(Todo.this, R.layout.dialog_edit, null);
 
-                itemsave.setOnClickListener(new View.OnClickListener() {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(Todo.this);
+
+                final AlertDialog ad = dlg.create();
+
+                ad.setView(vDialog);
+
+                Button btnDel = (Button) vDialog.findViewById(R.id.btnDel);
+                Button btnSave = (Button) vDialog.findViewById(R.id.btnSave);
+
+                final EditText edtItem = (EditText) vDialog.findViewById(R.id.edtItem);
+
+                ad.show();
+
+                edtItem.setText(adapter.getItem(position));
+                str = adapter.getItem(position);
+
+                btnDel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        listwindow.setVisibility(View.VISIBLE);
-                        editwindow.setVisibility(View.GONE);
-
-                        checked = listview.isItemChecked(position);
-
-                        sqlDB = myHelper.getWritableDatabase();
-                        if(str.equals("새로운 할 일") && !(edititem.getText().toString().equals("새로운 할 일")))
-                        {
-                            dbId = date + edititem.getText().toString();
-                            sqlDB.execSQL("INSERT INTO groupTBL VALUES('"+dbId+"', '"+date+"','"+edititem.getText().toString()+"', '" +checked+ "');");
-                        }
-                        else if(str.equals("새로운 할 일") && edititem.getText().toString().equals("새로운 할 일")) Toast.makeText(getApplicationContext(), "내용을 작성하세요", Toast.LENGTH_SHORT).show();
-                        else
-                        {
-                            dbId = date + items.get(position);
-                            String deleteQuery = "DELETE FROM groupTBL WHERE gdbId='" + dbId + "'";
-                            sqlDB.execSQL(deleteQuery);
-                            dbId = date + edititem.getText().toString();
-                            sqlDB.execSQL("INSERT OR REPLACE INTO groupTBL VALUES('"+dbId+"', '"+date+"','"+edititem.getText().toString()+"', '" +checked+ "');");
-                        }
-                        sqlDB.close();
-                        items.set(position, edititem.getText().toString());
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-
-                itemdelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listwindow.setVisibility(View.VISIBLE);
-                        editwindow.setVisibility(View.GONE);
-
                         sqlDB = myHelper.getWritableDatabase();
 
                         if(str.equals("새로운 할 일")) str = "";
@@ -279,8 +240,36 @@ public class Todo extends BaseActivity {
                             String deleteQuery = "DELETE FROM groupTBL WHERE gdbId='" + dbId + "'";
                             sqlDB.execSQL(deleteQuery);
                         }
-                        items.remove(position);
+                        adapter.removeItem(position);
                         adapter.notifyDataSetChanged();
+                        ad.dismiss();
+                    }
+                });
+
+                btnSave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(edtItem.getText().toString().equals("")){
+                            Toast.makeText(getApplicationContext(), "내용을 입력하세요", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(edtItem.getText().toString().equals("새로운 할 일")) {
+                        }
+                        else{
+                            checked = listview.isItemChecked(position);
+
+                            sqlDB = myHelper.getWritableDatabase();
+
+                            dbId = date + adapter.getItem(position);
+                            String deleteQuery = "DELETE FROM groupTBL WHERE gdbId='" + dbId + "'";
+                            sqlDB.execSQL(deleteQuery);
+                            dbId = date + edtItem.getText().toString();
+                            sqlDB.execSQL("INSERT OR REPLACE INTO groupTBL VALUES('"+dbId+"', '"+date+"','"+edtItem.getText().toString()+"', '" +checked+ "');");
+
+                            sqlDB.close();
+                            adapter.setItem(position, edtItem.getText().toString());
+                            adapter.notifyDataSetChanged();
+                            ad.dismiss();
+                        }
                     }
                 });
                 return false;
@@ -290,25 +279,27 @@ public class Todo extends BaseActivity {
         listview.setOnItemClickListener(OCL);
     }
 
-    private void loaditem(final ListView listview, final ArrayAdapter adapter, int year, int monthOfYear, int dayOfMonth){
+    private void loaditem(final ListView listview, final CustomLinearLayoutAdapter adapter, int year, int monthOfYear, int dayOfMonth){
+        int ID = 1;
+        sqlDB = myHelper.getWritableDatabase();
+        sqlDB.execSQL("INSERT OR REPLACE INTO DATE VALUES('"+ID+"', '"+date+"');");
+        sqlDB.close();
         String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + year + "" + monthOfYear + "" + dayOfMonth + "'";
         int index = 0;
         sqlDB = myHelper.getReadableDatabase();
         Cursor cursor;
         cursor = sqlDB.rawQuery(sqlSelect, null);
         while (cursor.moveToNext()) {
-            items.add(cursor.getString(2));
+            adapter.addItem(cursor.getString(2));
             listview.setItemChecked(index, Boolean.parseBoolean(cursor.getString(3)));
             index++;
         }
-        if(index == 0) items.add("새로운 할 일");
-        adapter.notifyDataSetChanged();
-
+        if(index == 0) adapter.addItem("새로운 할 일");
+        sqlDB.close();
+        cursor.close();
     }
 
-
-
-    private void makeDiary(int year, int monthOfYear, int dayOfMonth) {
+ private void makeDiary(int year, int monthOfYear, int dayOfMonth) {
 
         btnDatePicker.setText(year + "년 " + monthOfYear + "월 " + dayOfMonth + "일");
         fileName = year + "" + String.format("%02d", monthOfYear) + "" + String.format("%02d", dayOfMonth) + ".txt";
@@ -332,7 +323,6 @@ public class Todo extends BaseActivity {
                 int str1cnt = 0, str2cnt = 0;
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG,"Yes Btn Click");
                     dialog.dismiss();     //닫기
                     FileOutputStream outFS;
                     try {
@@ -353,6 +343,7 @@ public class Todo extends BaseActivity {
                                 str2cnt++;
                             }
                         }
+                        cursor.close();
 
                         if(str1cnt == 0 && str2cnt == 0){
                             Toast.makeText(getApplicationContext(), "먼저 투두리스트를 작성하세요", Toast.LENGTH_SHORT).show();
@@ -386,7 +377,6 @@ public class Todo extends BaseActivity {
             ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.v(TAG,"No Btn Click");
                     dialog.dismiss();     //닫기
                     // Event
                 }
@@ -402,7 +392,7 @@ public class Todo extends BaseActivity {
             FileOutputStream outFS;
             try {
                 outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
-                String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
+                String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" +date+ "'";
                 sqlDB = myHelper.getReadableDatabase();
                 Cursor cursor;
                 cursor = sqlDB.rawQuery(sqlSelect, null);
@@ -418,6 +408,7 @@ public class Todo extends BaseActivity {
                         str2cnt++;
                     }
                 }
+                cursor.close();
 
                 if(str1cnt == 0 && str2cnt == 0){
                     Toast.makeText(getApplicationContext(), "먼저 투두리스트를 작성하세요", Toast.LENGTH_SHORT).show();
@@ -446,21 +437,44 @@ public class Todo extends BaseActivity {
             }
         }
     }
-    public void captureView(View View) {
-        View.buildDrawingCache();
-        Bitmap captureView = View.getDrawingCache();
-        FileOutputStream fos;
+    public void Appexec() {
+        SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
 
-        String strFolderPath = getExternalFilesDir(null).getAbsolutePath() + "/Capture"; //내장에 만든다
+        if (settings.getBoolean("Appexec", true)) {
+            editor.putBoolean("Appexec", false);
+            editor.apply();
+            sqlDB = myHelper.getReadableDatabase();
 
-        String strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png";
-        File fileCacheItem = new File(strFilePath);
+            Cursor cursor;
+            cursor = sqlDB.rawQuery("SELECT * FROM pwTBL", null);
 
-        try {
-            fos = new FileOutputStream(fileCacheItem);
-            captureView.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            cursor.moveToFirst();
+            if(Boolean.parseBoolean(cursor.getString(2))) {
+                sqlDB.close();
+                cursor.close();
+                Intent intent = new Intent(getApplicationContext(), AppLocker.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    public void isFirstTime() {
+        SharedPreferences settings = getSharedPreferences(PREFNAME0, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        if (settings.getBoolean("isFirstTime", true)) {
+            editor.putBoolean("isFirstTime", false);
+            editor.apply();
+
+            int Id = 1;
+            String Pw = "1" + "0000";
+
+            Boolean Enable = false;
+
+            sqlDB = myHelper.getWritableDatabase();
+            sqlDB.execSQL("INSERT INTO pwTBL VALUES('"+Id+"', '"+Pw+"','"+Enable+"');");
+            sqlDB.close();
         }
     }
 }

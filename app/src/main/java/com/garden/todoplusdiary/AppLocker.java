@@ -15,12 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-public class AppLocker extends AppCompatActivity {
-    myDBHelper myHelper;
-    SQLiteDatabase sqlDB;
-    final String PREFNAME = "Preferences";
-    private long backKeyPressedTime = 0;
-    private Toast toast;
+public class AppLocker extends BaseActivity {
     TextView pw1, pw2, pw3, pw4;
     Button btnDel;
     int cnt = 1;
@@ -78,9 +73,7 @@ public class AppLocker extends AppCompatActivity {
                         pw4.setText("●");
                         inputpw += numButton[index].getText().toString();
                         if(checkpw(inputpw)) {
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            onStop();
+                            finish();
                         }
                         else{
                             cnt=1;
@@ -136,49 +129,8 @@ public class AppLocker extends AppCompatActivity {
         pw = cursor.getString(1);
 
         sqlDB.close();
+        cursor.close();
 
         return inputpw.equals(pw.substring(1, 5));
-    }
-    @Override
-    public void onBackPressed() {
-
-        // 기존 뒤로가기 버튼의 기능을 막기위해 주석처리 또는 삭제
-        // super.onBackPressed();
-
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지났으면 Toast Show
-        // 2000 milliseconds = 2 seconds
-        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-            backKeyPressedTime = System.currentTimeMillis();
-            toast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
-        // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
-        // 현재 표시된 Toast 취소
-        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            SharedPreferences settings = getSharedPreferences(PREFNAME, MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putBoolean("isFirstTime", true);
-            editor.apply();
-            ActivityCompat.finishAffinity(this);
-            toast.cancel();
-        }
-    }
-    public static class myDBHelper extends SQLiteOpenHelper {
-        public myDBHelper(Context context) {
-            super(context, "todoDB", null, 1);
-        }
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE pwTBL (gId Integer PRIMARY KEY, gPw String , gEnable BOOLEAN);"); //pw 테이블 생성
-        }
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS pwTBL");
-            onCreate(db);
-        }
     }
 }

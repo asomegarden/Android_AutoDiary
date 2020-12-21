@@ -7,39 +7,43 @@
     android:background="#C9CDD2"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:layout_margin="5dp">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/goHome"
-            android:fontFamily="@font/nanumbarunpen"
-            android:layout_weight="1"
-            android:text="Home"
-            android:background="#00ffffff"/>
+        <LinearLayout
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/btnMenu">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+               android:src="@drawable/icon_menu"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnDatePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
             android:fontFamily="@font/nanumbarunpen"
-            android:text=""
+            android:text="0000.00.00"
             android:background="#00ffffff"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/goDiary"
-            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:id="@+id/btnMakeDiary"
             android:fontFamily="@font/nanumbarunpen"
-            android:text="Diary"
+            android:text="일기 생성"
             android:background="#00ffffff"/>
-    </LinearLayout>
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,84 +53,48 @@
         <ListView
             android:id="@+id/todoView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="100"
             android:layout_margin="5dp"
-            android:background="@drawable/raund_light"
+            android:background="#00ffffff"
             android:choiceMode="multipleChoice" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="5dp"
+            android:gravity="center_vertical"
             android:background="@drawable/raund_gray">
 
-            <Button
-                android:id="@+id/btnMakeDiary"
-                android:layout_weight="1"
-                android:background="#00ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/nanumbarunpen"
-                android:text="일기 생성"
-                android:textColor="#000000"/>
 
-            <Button
-                android:id="@+id/btnAdd"
-                android:layout_weight="1"
-                android:background="#00ffffff"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/nanumbarunpen"
-                android:text="추가"
-                android:textColor="#000000"/>
 
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/editwindow"
-        android:visibility="gone">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/raund_light"
-            android:layout_margin="5dp"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:fontFamily="@font/nanumbarunpen"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:id="@+id/edititem"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/raund_gray"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
-            <Button
+            <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="삭제"
+                android:layout_weight="10"
                 android:background="#00ffffff"
-                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:fontFamily="@font/nanumbarunpen"
-                android:textColor="#000000"
-                android:id="@+id/itemdelete"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="#00ffffff"
-                android:text="입력"
-                android:layout_weight="1"
-                android:fontFamily="@font/nanumbarunpen"
-                android:textColor="#000000"
-                android:id="@+id/itemsave"/>
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:hint="새로운 할 일"
+                android:id="@+id/edtNewItem"/>
+
+            <LinearLayout
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:id="@+id/btnAdd">
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/icon_plus"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

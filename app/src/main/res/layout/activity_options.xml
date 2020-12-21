@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:launchMode="singleTask"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,9 +7,23 @@
     android:orientation="vertical"
     android:background="#C9CDD2">
 
+    <LinearLayout
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/btnMenu">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/icon_menu"/>
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="설정"
         android:layout_margin="5dp"
         android:layout_gravity="center"
@@ -19,74 +33,87 @@
         android:textSize="20dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/btnMenu"
         android:layout_margin="5dp"
         android:textColor="#000000"
         android:fontFamily="@font/nanumbarunpen"
         android:padding="5dp"
         android:background="@drawable/raund_gray"
+        android:id="@+id/text1"
         android:text="데이터 관리"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
+        android:layout_below="@+id/text1"
         android:textColor="#000000"
         android:text="일기장 초기화"
         android:fontFamily="@font/nanumbarunpen"
         android:layout_margin="5dp"
-        android:background="@drawable/raund_light"
+        android:background="#00ffffff"
         android:id="@+id/resetdiary"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
         android:textColor="#000000"
+        android:layout_below="@id/resetdiary"
         android:fontFamily="@font/nanumbarunpen"
         android:text="투두리스트 초기화"
         android:layout_margin="5dp"
-        android:background="@drawable/raund_light"
+        android:background="#00ffffff"
         android:id="@+id/resettodo"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:fontFamily="@font/nanumbarunpen"
         android:layout_margin="5dp"
+        android:layout_below="@id/resettodo"
         android:textColor="#000000"
         android:padding="5dp"
         android:background="@drawable/raund_gray"
+        android:id="@+id/text3"
         android:text="보안"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
         android:textColor="#000000"
+        android:layout_below="@id/text3"
         android:fontFamily="@font/nanumbarunpen"
         android:text="앱 잠금 활성화"
         android:layout_margin="5dp"
-        android:background="@drawable/raund_light"
+        android:background="#00ffffff"
         android:id="@+id/ApplockToggle"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:visibility="gone"
+        android:layout_below="@+id/ApplockToggle"
         android:fontFamily="@font/nanumbarunpen"
         android:gravity="center"
         android:textColor="#000000"
         android:text="비밀번호 설정(기본값 0000)"
         android:layout_margin="5dp"
-        android:background="@drawable/raund_light"
+        android:background="#00ffffff"
         android:id="@+id/setPw"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/setPw"
         android:layout_margin="5dp"
         android:textColor="#000000"
         android:fontFamily="@font/nanumbarunpen"
         android:padding="5dp"
         android:background="@drawable/raund_gray"
+        android:id="@+id/text2"
         android:text="도움말"/>
     <TextView
         android:layout_width="match_parent"
@@ -95,12 +122,14 @@
         android:fontFamily="@font/nanumbarunpen"
         android:textColor="#000000"
         android:text="사용방법"
+        android:layout_below="@+id/text2"
         android:layout_margin="5dp"
-        android:background="@drawable/raund_light"
+        android:background="#00ffffff"
         android:id="@+id/help"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/help"
         android:fontFamily="@font/nanumbarunpen"
         android:textColor="#000000"
         android:visibility="gone"
@@ -108,20 +137,18 @@
         android:padding="5dp"
         android:text="TD(Todo Diary)는 사용자가 입력한 투두리스트의 내용을 일기로 자동 변환해줍니다. \n\n
 Diary화면과 Todo화면 상단 중앙에 있는 날짜 텍스트를 클릭하면 날짜를 변경할 수 있습니다.\n
-Todo화면에서 '추가'버튼을 클릭하면 새로운 항목이 추가되고 길게 눌러 편집할 수 있습니다.\n
+좌측 상단에 위치한 세 줄 아이콘을 누르면 메뉴 화면이 열립니다.\n\n
+Todo화면에서 내용을 입력하고 더하기 아이콘을 클릭하면 할 일이 추가됩니다.\n기존 항목을 길게 눌러 편집할 수 있습니다.\n
 일과가 끝난 후 '일기 생성'버튼을 누르면 자동으로 같은 날짜의 일기가 생성됩니다.\n
-이미 해당 날짜의 일기가 존재하는 경우에는 일기가 생성되지 않습니다.\n
 해당 날짜의 투두리스트는 '일기생성'버튼을 길게 눌러 초기화 할 수 있습니다.\n\n
-Diary화면에서 중앙의 흰 부분을 눌러 일기를 작성 및 수정할 수 있습니다.\n
+Diary화면에서 일기를 작성 및 수정할 수 있습니다.\n
 '삭제'버튼을 이용해 해당 날짜의 일기를 삭제할 수 있습니다.\n
-메인 화면에서 '일기 목록'버튼을 누르면 지금까지 작성한 모든 일기를 볼 수 있습니다.\n
+'일기 목록'에서는 지금까지 작성한 모든 일기를 볼 수 있습니다.\n
 특정 일기를 길게 눌러 삭제할 수 있습니다.\n\n
 앱 잠금기능을 활성화하면 앱이 실행될 때, 앱이 비활성화된지 30초가 지났을 때\n
 잠금 화면이 뜨게 됩니다. 최초 비밀번호는 '0000'이며\n
-앱 잠금기능을 비활성화하면 다시 '0000'으로 초기화됩니다.\n\n
-Diary화면과 Todo화면에서 캡쳐 기능을 지원합니다. '저장/수정' 또는 '추가'버튼을 길게 눌러보세요\n
-캡쳐한 사진은 Android/data/com.garden.todoplusdiary/files/Capture 에 저장됩니다."
+앱 잠금기능을 비활성화하면 다시 '0000'으로 초기화됩니다.\n"
         android:layout_margin="5dp"
         android:background="@drawable/raund_light"
         android:id="@+id/helptext"/>
-</LinearLayout>
+</RelativeLayout>

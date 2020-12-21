@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,8 +22,6 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 public class DiaryList extends BaseActivity {
-
-    Button  goHome, goTodo, goDiary;
     final ArrayList<String> items = new ArrayList<String>();
     String date = "";
     public static final String TAG = "Test_Alert_Dialog";
@@ -32,33 +31,13 @@ public class DiaryList extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary_list);
 
-        //엑티비티 이동
-        goHome = (Button) findViewById(R.id.goHome);
-        goTodo = (Button) findViewById(R.id.goTodo);
-        goDiary = (Button) findViewById(R.id.goDiary);
+        LinearLayout btnMenu = (LinearLayout) findViewById(R.id.btnMenu);
 
-        goHome.setOnClickListener(new View.OnClickListener() {
+        btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(DiaryList.this, MenuActivity.class);
                 startActivity(intent);
-                onStop();
-            }
-        });
-        goTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Todo.class);
-                startActivity(intent);
-                onStop();
-            }
-        });
-        goDiary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Diary.class);
-                startActivity(intent);
-                onStop();
             }
         });
 

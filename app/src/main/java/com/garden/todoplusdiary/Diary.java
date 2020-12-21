@@ -1,5 +1,6 @@
 package com.garden.todoplusdiary;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,7 +26,7 @@ import java.util.Calendar;
 public class Diary extends BaseActivity {
 
     EditText edtDiary;
-    Button btnSave, btnDatePicker, goHome, goTodo, btnDel;
+    Button btnSave, btnDatePicker, btnDel;
     public static final String TAG = "Test_Alert_Dialog";
     String fileName = "";
 
@@ -37,6 +39,7 @@ public class Diary extends BaseActivity {
         edtDiary = (EditText) findViewById(R.id.edtDiary);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnDatePicker = (Button) findViewById(R.id.btnDatePicker);
+        LinearLayout btnMenu = (LinearLayout) findViewById(R.id.btnMenu);
 
         Calendar c = Calendar.getInstance();
         checkedDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
@@ -50,7 +53,13 @@ public class Diary extends BaseActivity {
             }
         });
 
-
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Diary.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,67 +69,20 @@ public class Diary extends BaseActivity {
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                edtDiary.setText("");
-                saveDiary(fileName);
-                btnSave.setText("저장");
-                deleteFile(fileName);
-            }
-        });
-
-        btnSave.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(Diary.this, R.style.MyDialogTheme);
-
-                ad.setTitle("확인");       // 제목 설정
-                ad.setMessage("캡쳐 하시겠습니까?");   // 내용 설정
-
-                // 확인 버튼 설정
-                ad.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                AlertDialog.Builder dlg = new AlertDialog.Builder(Diary.this, R.style.MyDialogTheme);
+                dlg.setTitle("주의");
+                dlg.setMessage("일기가 삭제됩니다.");
+                dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"Yes Btn Click");
-                        dialog.dismiss();     //닫기
-                        captureView(edtDiary);
-                        Toast.makeText(getApplicationContext(), "캡쳐됨", Toast.LENGTH_SHORT).show();
-                        // Event
+                        edtDiary.setText("");
+                        saveDiary(fileName);
+                        btnSave.setText("저장");
+                        deleteFile(fileName);
                     }
                 });
-
-                // 취소 버튼 설정
-                ad.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.v(TAG,"No Btn Click");
-                        dialog.dismiss();     //닫기
-                        // Event
-                    }
-                });
-                // 창 띄우기
-                ad.show();
-                return false;
-            }
-        });
-
-
-        //엑티비티 이동
-        goHome = (Button) findViewById(R.id.goHome);
-        goTodo = (Button) findViewById(R.id.goTodo);
-
-        goHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                onStop();
-            }
-        });
-        goTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Todo.class);
-                startActivity(intent);
-                onStop();
+                dlg.setNegativeButton("취소", null);
+                dlg.show();
             }
         });
 
@@ -139,6 +101,7 @@ public class Diary extends BaseActivity {
     }
 
     // 일기 파일 읽기
+    @SuppressLint("DefaultLocale")
     private void checkedDay(int year, int monthOfYear, int dayOfMonth) {
 
         btnDatePicker.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
@@ -187,23 +150,6 @@ public class Diary extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void captureView(View View) {
-        View.buildDrawingCache();
-        Bitmap captureView = View.getDrawingCache();
-        FileOutputStream fos;
-
-        String strFolderPath = getExternalFilesDir(null).getAbsolutePath() + "/Capture"; //내장에 만든다
-
-        String strFilePath = strFolderPath + "/" + System.currentTimeMillis() + ".png";
-        File fileCacheItem = new File(strFilePath);
-
-        try {
-            fos = new FileOutputStream(fileCacheItem);
-            captureView.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

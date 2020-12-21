@@ -194,6 +194,7 @@ public class PwSetting extends AppCompatActivity {
         pw = cursor.getString(1);
 
         sqlDB.close();
+        cursor.close();
 
         return inputpw.equals(pw.substring(1, 5));
     }
