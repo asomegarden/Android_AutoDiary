@@ -21,10 +21,12 @@
         <entry key="..\:/Develops/AndroidStudio/Projects/simple_Diary/app/src/main/res/layout/dialog_edit.xml" value="0.2957427536231884" />
         <entry key="..\:/Develops/AndroidStudio/Projects/simple_Diary/app/src/main/res/layout/listview_custom.xml" value="0.2957427536231884" />
         <entry key="..\:/Develops/AndroidStudio/Projects/simple_Diary/app/src/main/res/layout/listview_item_simple.xml" value="0.2957427536231884" />
+        <entry key="..\:/Develops/AndroidStudio/Projects/simple_Diary/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21822916666666667" />
+        <entry key="..\:/Develops/AndroidStudio/Projects/simple_Diary/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.21822916666666667" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
