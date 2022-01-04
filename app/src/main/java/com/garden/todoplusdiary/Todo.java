@@ -117,6 +117,11 @@ public class Todo extends BaseActivity {
                     edtNewItem.setText("");
                 }
                 else{
+                    if(!adapter.isEmpty()){
+                        if(adapter.getItem(0) == "새로운 할 일"){
+                            adapter.removeItem(0);
+                        }
+                    }
                     adapter.addItem(edtNewItem.getText().toString());
                     adapter.notifyDataSetChanged();
 
@@ -272,7 +277,7 @@ public class Todo extends BaseActivity {
                         }
                     }
                 });
-                return false;
+                return true;
             }
         };
         listview.setOnItemLongClickListener(OCL_L);
