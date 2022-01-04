@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:padding="10dp"
-    android:background="#C9CDD2"
+    android:background="@color/basicBackground"
+    android:id="@+id/layout_diary"
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="35dp"
@@ -26,6 +27,7 @@
         android:fontFamily="@font/nanumbarunpen"
         android:background="#00ffffff"/>
 
+    <!--
     <Button
         android:id="@+id/btnSave"
         android:layout_alignParentRight="true"
@@ -36,28 +38,30 @@
         android:layout_height="wrap_content"
         android:text="저장"
         android:textColor="#000000"/>
+        -->
 
     <EditText
         android:id="@+id/edtDiary"
-        android:layout_below="@id/btnDatePicker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/btnDatePicker"
         android:background="#00ffffff"
         android:ems="10"
         android:fontFamily="@font/nanumbarunpen"
         android:gravity="start"
+        android:hint="오늘 하루를 기록해보세요"
         android:inputType="text|textMultiLine"
-        android:padding="10dp"
-        android:hint="오늘 하루를 기록해보세요" />
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnDel"
-        android:background="#00ffffff"
-        android:layout_alignParentBottom="true"
         android:layout_width="50dp"
-        android:fontFamily="@font/nanumbarunpen"
-        android:layout_gravity="center"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:background="#00ffffff"
+        android:fontFamily="@font/nanumbarunpen"
         android:text="삭제"
-        android:textColor="#000000"/>
+        android:textColor="#000000" />
 </RelativeLayout>

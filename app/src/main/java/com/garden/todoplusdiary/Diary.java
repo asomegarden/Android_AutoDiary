@@ -2,17 +2,24 @@ package com.garden.todoplusdiary;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,8 +33,7 @@ import java.util.Calendar;
 public class Diary extends BaseActivity {
 
     EditText edtDiary;
-    Button btnSave, btnDatePicker, btnDel;
-    public static final String TAG = "Test_Alert_Dialog";
+    Button btnDatePicker, btnDel;
     String fileName = "";
 
     @Override
@@ -37,14 +43,19 @@ public class Diary extends BaseActivity {
 
         btnDel = (Button) findViewById(R.id.btnDel);
         edtDiary = (EditText) findViewById(R.id.edtDiary);
-        btnSave = (Button) findViewById(R.id.btnSave);
         btnDatePicker = (Button) findViewById(R.id.btnDatePicker);
         LinearLayout btnMenu = (LinearLayout) findViewById(R.id.btnMenu);
+        RelativeLayout layoutDiary = (RelativeLayout) findViewById(R.id.layout_diary);
 
         Calendar c = Calendar.getInstance();
-        checkedDay(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
 
-        btnDatePicker.setText(c.get(Calendar.YEAR) +"년 "+ (c.get(Calendar.MONTH)+1) +"월 "+ c.get(Calendar.DATE) + "일");
+        if(getIntent().hasExtra("date")){
+            String date = getIntent().getStringExtra("date");
+            loadDiary(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(4, 6))-1, Integer.parseInt(date.substring(6, 8)));
+        }else{
+            loadDiary(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+        }
+
 
         btnDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,12 +71,7 @@ public class Diary extends BaseActivity {
                 startActivity(intent);
             }
         });
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveDiary(fileName);
-            }
-        });
+
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +83,6 @@ public class Diary extends BaseActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         edtDiary.setText("");
                         saveDiary(fileName);
-                        btnSave.setText("저장");
                         deleteFile(fileName);
                     }
                 });
@@ -89,11 +94,13 @@ public class Diary extends BaseActivity {
     }
 
     void showDate() {
+        saveDiary(fileName);
+
         Calendar cal = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                checkedDay(year, month, dayOfMonth);
+                loadDiary(year, month, dayOfMonth);
             }
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
 
@@ -102,7 +109,7 @@ public class Diary extends BaseActivity {
 
     // 일기 파일 읽기
     @SuppressLint("DefaultLocale")
-    private void checkedDay(int year, int monthOfYear, int dayOfMonth) {
+    private void loadDiary(int year, int monthOfYear, int dayOfMonth) {
 
         btnDatePicker.setText(year + "년 " + (monthOfYear + 1) + "월 " + dayOfMonth + "일");
 
@@ -119,10 +126,8 @@ public class Diary extends BaseActivity {
             String str = new String(fileData, "UTF-8");
 
             edtDiary.setText(str);
-            btnSave.setText("수정");
         } catch (Exception e) {     //일기 유무 검사
             edtDiary.setText("");
-            btnSave.setText("저장");
             e.printStackTrace();
         }
 
@@ -138,18 +143,21 @@ public class Diary extends BaseActivity {
             if(str.equals("")) {
                 outFS.close();
                 deleteFile(readDay);
-                Toast.makeText(getApplicationContext(), "내용을 입력하세요", Toast.LENGTH_SHORT).show();
             }
             else {
                 outFS.write(str.getBytes());
-                Toast.makeText(getApplicationContext(), "저장됨", Toast.LENGTH_SHORT).show();
-                btnSave.setText("수정");
                 outFS.close();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "오류", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        saveDiary(fileName);
+        super.onPause();
+        super.appPauseTime = System.currentTimeMillis(); //액티비티가 정지되면 시간 기록
     }
 }

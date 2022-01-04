@@ -41,19 +41,17 @@ public class DiaryList extends BaseActivity {
             }
         });
 
-        final String[] Diarytitle = getTitleList();
+        final String[] diaryTitle = getTitleList();
         final ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_item_simple, items);
         final ListView listview = (ListView) findViewById(R.id.DiaryList);
         listview.setAdapter(adapter);
 
-        if(Diarytitle == null||Diarytitle.length == 0) items.add("일기를 추가해보세요");
-
-        else
-        {
-            for(int i=0; i<Diarytitle.length; i++) {
+        if(diaryTitle == null||diaryTitle.length == 0) items.add("일기를 추가해보세요");
+        else {
+            for(int i=0; i<diaryTitle.length; i++) {
                 FileInputStream inFS;
                 try {
-                    inFS = openFileInput(Diarytitle[i]);
+                    inFS = openFileInput(diaryTitle[i]);
 
                     byte[] fileData = new byte[inFS.available()];
                     inFS.read(fileData);
@@ -61,7 +59,7 @@ public class DiaryList extends BaseActivity {
 
                     String str = new String(fileData, "UTF-8");
 
-                    date = Diarytitle[i].substring(0,4) + Diarytitle[i].substring(4,6) + Diarytitle[i].substring(6,8);
+                    date = diaryTitle[i].substring(0,4) + diaryTitle[i].substring(4,6) + diaryTitle[i].substring(6,8);
 
                     items.add(date + "\n" + str);
                 } catch (Exception e) {     //일기 유무 검사
@@ -71,7 +69,21 @@ public class DiaryList extends BaseActivity {
         }
         adapter.notifyDataSetChanged();
 
-        AdapterView.OnItemLongClickListener OLCL = new AdapterView.OnItemLongClickListener() {
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                if(items.get(pos).equals("일기를 추가해보세요")){
+                    Intent intent = new Intent(DiaryList.this, Diary.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(DiaryList.this, Diary.class);
+                    intent.putExtra("date", date);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        listview.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 final String filename = items.get(position).substring(0, 4) + items.get(position).substring(4, 6) + items.get(position).substring(6, 8) + ".txt";
@@ -112,10 +124,9 @@ public class DiaryList extends BaseActivity {
                     // 창 띄우기
                     ad.show();
                 }
-                return false;
+                return true;
             }
-        };
-        listview.setOnItemLongClickListener(OLCL);
+        });
     }
 
     private String[] getTitleList()

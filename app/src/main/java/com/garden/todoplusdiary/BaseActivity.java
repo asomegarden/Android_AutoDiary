@@ -7,6 +7,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Rect;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,18 +21,18 @@ public class BaseActivity extends AppCompatActivity { //공통으로 들어가�
     SQLiteDatabase sqlDB;
     final String PREFNAME = "Preferences";
 
-    private long Apppausetime = System.currentTimeMillis();
+    protected long appPauseTime = System.currentTimeMillis();
 
     @Override
     protected void onPause() {
         super.onPause();
-        Apppausetime = System.currentTimeMillis(); //액티비티가 정지되면 시간 기록
+        appPauseTime = System.currentTimeMillis(); //액티비티가 정지되면 시간 기록
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (System.currentTimeMillis() >= Apppausetime + 30000) { //재개될 때 30초 이상이 지났으면
+        if (System.currentTimeMillis() >= appPauseTime + 30000) { //재개될 때 30초 이상이 지났으면
 
             myHelper = new myDBHelper(this);
             sqlDB = myHelper.getReadableDatabase();
@@ -45,6 +49,26 @@ public class BaseActivity extends AppCompatActivity { //공통으로 들어가�
             cursor.close();
         }
     }
+
+    //현재 포커스 되지 않은 다른 뷰를 클릭하면 자동으로 키보드 내려가게
+    //https://ohdbjj.tistory.com/7`
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();
+        if (focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if (!rect.contains(x, y)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
     private Toast toast;
     private long backKeyPressedTime = 0;
 
