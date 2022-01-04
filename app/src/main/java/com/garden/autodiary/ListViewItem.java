@@ -1,4 +1,4 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
 public class ListViewItem {
     private String text;

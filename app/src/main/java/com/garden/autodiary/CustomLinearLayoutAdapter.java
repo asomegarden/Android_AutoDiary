@@ -1,4 +1,4 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomLinearLayoutAdapter extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList

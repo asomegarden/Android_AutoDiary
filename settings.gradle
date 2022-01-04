@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "simple_Diary"
+rootProject.name = "auto_diary"

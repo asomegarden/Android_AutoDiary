@@ -5,11 +5,11 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.garden.todoplusdiary"
+        applicationId "com.garden.autodiary"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 11
-        versionName "2.1"
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

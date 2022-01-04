@@ -1,4 +1,4 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
 import android.content.DialogInterface;
 import android.content.Intent;

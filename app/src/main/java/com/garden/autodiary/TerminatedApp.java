@@ -1,4 +1,4 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
 import android.app.Service;
 import android.content.Intent;

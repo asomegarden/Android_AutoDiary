@@ -1,19 +1,14 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,13 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Todo extends BaseActivity {
@@ -331,7 +322,7 @@ public class Todo extends BaseActivity {
                     dialog.dismiss();     //닫기
                     FileOutputStream outFS;
                     try {
-                        outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
+                        outFS = openFileOutput(fileName, MODE_PRIVATE); //MODE_WORLD_WRITEABLE
                         String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" + date + "'";
                         sqlDB = myHelper.getReadableDatabase();
                         Cursor cursor;
@@ -396,7 +387,7 @@ public class Todo extends BaseActivity {
 
             FileOutputStream outFS;
             try {
-                outFS = openFileOutput(fileName, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
+                outFS = openFileOutput(fileName, MODE_PRIVATE); //MODE_WORLD_WRITEABLE
                 String sqlSelect = "SELECT * FROM groupTBL WHERE gDate=" + "'" +date+ "'";
                 sqlDB = myHelper.getReadableDatabase();
                 Cursor cursor;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.garden.todoplusdiary">
+    package="com.garden.autodiary">
 
     <application
         android:allowBackup="true"
@@ -9,20 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.garden.todoplusdiary.Todo">
+        <activity android:name="com.garden.autodiary.Todo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.garden.todoplusdiary.Diary"/>
-        <activity android:name="com.garden.todoplusdiary.DiaryList"/>
-        <activity android:name="com.garden.todoplusdiary.Options"/>
-        <activity android:name="com.garden.todoplusdiary.AppLocker"/>
-        <activity android:name="com.garden.todoplusdiary.PwSetting"/>
-        <activity android:name=".MenuActivity"/>
-        <service android:name=".TerminatedApp"
+        <activity android:name="com.garden.autodiary.Diary"/>
+        <activity android:name="com.garden.autodiary.DiaryList"/>
+        <activity android:name="com.garden.autodiary.Options"/>
+        <activity android:name="com.garden.autodiary.AppLocker"/>
+        <activity android:name="com.garden.autodiary.PwSetting"/>
+        <activity android:name="com.garden.autodiary.MenuActivity"/>
+        <service android:name="com.garden.autodiary.TerminatedApp"
             android:stopWithTask="false" />
     </application>
 </manifest>

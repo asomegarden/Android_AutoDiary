@@ -1,32 +1,20 @@
-package com.garden.todoplusdiary;
+package com.garden.autodiary;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Calendar;
 
@@ -137,7 +125,7 @@ public class Diary extends BaseActivity {
     private void saveDiary(String readDay) {
         FileOutputStream outFS;
         try {
-            outFS = openFileOutput(readDay, Context.MODE_PRIVATE); //MODE_WORLD_WRITEABLE
+            outFS = openFileOutput(readDay, MODE_PRIVATE); //MODE_WORLD_WRITEABLE
             String str = edtDiary.getText().toString();
 
             if(str.equals("")) {
